@@ -1,0 +1,7 @@
+    {
+  "explorer.autoReveal": true,
+  "explorer.expandSingleFolderWorkspaces": false,
+  "explorer.compactFolders": true,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": false
+}
