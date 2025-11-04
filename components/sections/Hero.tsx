@@ -25,7 +25,7 @@ export default function Hero() {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1 }}
-      className="text-center md:text-left"
+      className="xl:px-20 text-center md:text-left"
     >
       <motion.h1
         initial={{ backgroundPosition: "0% 50%" }}
