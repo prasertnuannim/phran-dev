@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     siteName: "Phran.Dev",
     images: [
       {
-        url: "https://phran.dev/og-image.jpg",
+        url: "https://phran.dev/images/phran-hunter.png",
         width: 1200,
         height: 630,
         alt: "Pharan Dev Hero Image",
@@ -54,8 +54,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Phran.Dev – สร้างความฝัน ล่าความคิด",
     description:
-      "Where instinct meets innovation. นักพัฒนาและนักออกแบบระบบอัจฉริยะจากประเทศไทย",
-    images: ["https://phran.dev/og-image.jpg"],
+      "Where instinct meets innovation. นักพัฒนาและนักออกแบบระบบอัจฉริยะ",
+    images: ["https://phran.dev/images/phran-hunter.png"],
     creator: "@phrandev",
   },
   alternates: {
