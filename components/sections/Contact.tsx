@@ -21,11 +21,9 @@ export default function Contact() {
   const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");
   const [showMessage, setShowMessage] = useState(false);
 
-  // ✏️ เก็บค่าฟอร์มและ error
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  // ✅ ตรวจ real-time เมื่อพิมพ์
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -40,7 +38,6 @@ export default function Contact() {
     }
   };
 
-  // ⏳ จัดการสถานะของฟอร์มหลังส่ง
   useEffect(() => {
     if (state.status === "success") {
       queueMicrotask(() => {
@@ -70,7 +67,6 @@ export default function Contact() {
     }
   }, [state.status]);
 
-  // 🚫 ปิดปุ่มถ้ามี error ใด ๆ
   const hasError = Object.values(errors).some((e) => e !== "");
 
   return (
@@ -101,7 +97,7 @@ export default function Contact() {
             }}
             transition={{ duration: 0.6 }}
           >
-            มีโปรเจกต์, ไอเดีย, หรือแค่อยากพูดคุย ?
+            มีโปรเจกต์ ไอเดีย หรือแค่อยากพูดคุย ?
           </motion.div>
 
           <motion.div
@@ -111,13 +107,11 @@ export default function Contact() {
             }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            ส่งข้อความมาหาผมได้เลย, มาสร้างสิ่งใหม่ไปด้วยกัน !
+            ส่งข้อความมาหาผมได้เลย มาสร้างสิ่งใหม่ไปด้วยกัน !
           </motion.div>
         </motion.div>
 
-        {/* 📨 ฟอร์ม */}
         <form ref={formRef} action={formAction} className="space-y-5">
-          {/* Name */}
           <div className="text-left">
             <input
               name="name"
