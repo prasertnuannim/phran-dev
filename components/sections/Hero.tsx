@@ -75,7 +75,7 @@ export default function Hero() {
         className="relative flex justify-center items-center w-full md:w-1/2 h-[55vh] md:h-screen"
       >
         <Image
-          src="/images/pharan-hunter.png"
+          src="/images/phran-hunter.png"
           alt="Pharan Hunter Developer"
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
