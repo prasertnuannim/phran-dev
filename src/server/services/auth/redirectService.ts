@@ -12,7 +12,7 @@ type RedirectService = {
 };
 
 const createRedirectService = (base?: string): RedirectService => {
-  const baseUrl = base ?? process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+  const baseUrl = base ?? process.env.NEXT_PUBLIC_BASE_URL ?? "http://phran.dev";
   const defaultRedirect = AUTH_REDIRECT_PATH;
 
   const normalizeInternalUrl = (target: string): string => {
