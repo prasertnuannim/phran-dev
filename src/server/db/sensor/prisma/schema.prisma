@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model SensorReading {
+  id          String   @id @default(cuid())
+  deviceId    String
+  type        String
+  co2         Float
+  temperature Float
+  humidity    Float
+  createdAt   DateTime @default(now())
+}
