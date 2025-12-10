@@ -27,9 +27,6 @@
       "@/*": [
         "./src/*"
       ],
-      "@/app/*": [
-        "./app/*"
-      ],
       "@radix-ui/*": [
         ".tmp-node-mods/node_modules/@radix-ui/*"
       ],
