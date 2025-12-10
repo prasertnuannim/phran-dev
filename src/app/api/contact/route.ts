@@ -1,10 +1,10 @@
-// app/api/contact/route.ts
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { ContactPayload } from "@/types/contact";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, message } = await req.json();
+    const { name, email, message } = (await req.json()) as ContactPayload;
     if (!name || !email || !message) {
       return NextResponse.json({ error: "กรอกไม่ครบ" }, { status: 400 });
     }
@@ -27,8 +27,9 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true });
-  } catch (err: any) {
-    console.error("sendMail error:", err);
-    return NextResponse.json({ error: err.message || "Failed" }, { status: 500 });
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error("Failed");
+    console.error("sendMail error:", error);
+    return NextResponse.json({ error: error.message || "Failed" }, { status: 500 });
   }
 }

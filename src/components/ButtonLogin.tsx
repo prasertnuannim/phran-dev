@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import { Dialog, DialogPanel } from "@headlessui/react";
+import { SocialSignInButton } from "./auth/SocialSignInButton";
+import { FaGithub } from "react-icons/fa";
 
 export function ButtonLogin() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,15 +22,22 @@ export function ButtonLogin() {
       </nav>
 
       {/* MODAL */}
-      <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
+      <Dialog
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        className="relative z-50"
+      >
         {/* Overlay */}
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" aria-hidden="true" />
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+          aria-hidden="true"
+        />
 
         {/* Center Modal */}
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel
-            className="
-        w-full max-w-sm rounded-2xl p-8
+            className="p-1
+        rounded-2xl
         border border-white/20 
         bg-white/10 
         backdrop-blur-2xl 
@@ -36,68 +45,32 @@ export function ButtonLogin() {
         animate-fadeScale
       "
           >
-            <DialogTitle className="text-2xl font-semibold text-white/90 mb-6">
-              Login
-            </DialogTitle>
-
-            {/* Form */}
-            <form className="flex flex-col gap-4">
-              <input
-                type="email"
-                placeholder="Email"
+            <div className="relative z-10 w-full max-w-4xl">
+              <div
                 className="
-            w-full px-4 py-3 rounded-lg
-            bg-white/20 border border-white/30
-            placeholder-white/50 text-white
-            backdrop-blur-md
-            focus:outline-none focus:ring-2 focus:ring-blue-300/40
-            transition
-          "
-              />
-
-              <input
-                type="password"
-                placeholder="Password"
-                className="
-            w-full px-4 py-3 rounded-lg
-            bg-white/20 border border-white/30
-            placeholder-white/50 text-white
-            backdrop-blur-md
-            focus:outline-none focus:ring-2 focus:ring-blue-300/40
-            transition
-          "
-              />
-
-              <button
-                type="submit"
-                className="
-    w-full px-4 py-3 rounded-md 
-    bg-gradient-to-br from-blue-600 to-blue-400 
-    text-white font-medium 
-    backdrop-blur 
-    shadow-lg shadow-blue-600/30
-    transition-all duration-200
-    hover:from-blue-500 hover:to-blue-300
-    hover:shadow-blue-500/40
-    cursor-pointer
-  "
+                        rounded-2xl border-black/5
+                        backdrop-blur-md shadow-xl
+                        overflow-hidden flex flex-col md:flex-row
+                      "
               >
-                Sign in
-              </button>
+                <div className="flex flex-col justify-center gap-4 text-white p-6 md:p-8 w-full">
+                  <h2 className="text-xl sm:text-2xl font-semibold">Login</h2>
+                  <SocialSignInButton />
+                  <SocialSignInButton
+                    provider="github"
+                    label="Continue with GitHub"
+                    icon={<FaGithub className="w-5 h-5 mr-2" />}
+                  />
 
-
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                className="text-sm text-white/70 hover:text-white mt-2 cursor-pointer"
-              >
-                Cancel
-              </button>
-            </form>
+                  <p className="mt-2 text-xs text-white/70">
+                    By logging in, you agree to our Terms of Service.
+                  </p>
+                </div>
+              </div>
+            </div>
           </DialogPanel>
         </div>
       </Dialog>
-
     </>
   );
 }

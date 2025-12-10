@@ -1,5 +1,7 @@
+import SessionProvider from "@/components/auth/SessionProvider";
 import "./globals.css";
 import { Plus_Jakarta_Sans, Noto_Sans_Thai } from "next/font/google";
+import { auth } from "@/server/services/auth/authService";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -18,7 +20,8 @@ export const metadata = {
   description: "Where instinct meets innovation.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
   return (
     <html lang="th" className={`${plusJakarta.variable} ${notoThai.variable}`} suppressHydrationWarning>
       <body
@@ -27,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           bg-gradient-to-br from-white via-[#f8f6f1] to-[#e9e6df] text-neutral-900
         "
       >
-      {children}
+      <SessionProvider session={session}>  {children}</SessionProvider>
       </body>
     </html>
   );

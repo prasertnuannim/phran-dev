@@ -6,22 +6,48 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prisma:generate": "prisma generate"
+  },
+  "prisma": {
+    "schema": "./src/server/db/auth/prisma/schema.prisma"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
     "@fontsource/noto-sans-thai": "^5.2.8",
     "@fontsource/plus-jakarta-sans": "^5.2.8",
     "@headlessui/react": "^2.2.9",
+    "@prisma/adapter-pg": "^7.1.0",
     "@prisma/client": "^7.1.0",
+    "@radix-ui/react-alert-dialog": "^1.1.6",
+    "@radix-ui/react-avatar": "^1.1.7",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-tooltip": "^1.1.9",
+    "@types/pg": "^8.15.6",
+    "bcryptjs": "^3.0.3",
+    "chart.js": "^4.5.1",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "framer-motion": "^12.23.24",
-    "next": "16.0.0",
-    "next-auth": "^4.24.13",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.555.0",
+    "next": "15.3.6",
+    "next-auth": "^5.0.0-beta.28",
     "nodemailer": "^7.0.10",
+    "pg": "^8.16.3",
     "prisma": "^7.1.0",
     "react": "19.2.0",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "19.2.0",
-    "resend": "^6.4.0"
+    "react-icons": "^5.5.0",
+    "resend": "^6.4.0",
+    "shadcn": "^3.5.1",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -32,6 +58,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.0",
     "tailwindcss": "^4",
+    "tw-animate-css": "^1.4.0",
     "typescript": "^5"
   }
 }
