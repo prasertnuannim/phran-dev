@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
+import { defineConfig } from "prisma/config";
 
 const schemaEnv = process.env.PRISMA_SCHEMA;
 const schema =
@@ -10,7 +10,9 @@ const schema =
       : "./src/server/db/auth/prisma/schema.prisma";
 
 const isSensor = schema.includes("/sensor/");
-const datasourceUrl = isSensor ? env("DATABASE_URL_SENSOR") : env("DATABASE_URL");
+const datasourceUrl = isSensor
+  ? process.env.DATABASE_URL_SENSOR ?? "postgresql://user:pass@localhost:5432/sensor"
+  : process.env.DATABASE_URL ?? "postgresql://user:pass@localhost:5432/auth";
 const migrationsPath = isSensor
   ? "src/server/db/sensor/prisma/migrations"
   : "src/server/db/auth/prisma/migrations";
