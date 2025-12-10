@@ -8,10 +8,10 @@ export default function Hero() {
   return (
     <Section
       id="home"
+      bg="bg-gradient-to-br from-gray-100 via-sky-200 to-gray-700"
       className="
         relative flex flex-col-reverse md:flex-row
         items-center justify-center min-h-screen overflow-hidden
-        bg-gradient-to-br from-gray-100 via-sky-200 to-gray-700
         text-[#2b2b2b] px-6 md:px-16
       "
     >
@@ -27,7 +27,7 @@ export default function Hero() {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1 }}
-      className="text-center md:text-left"
+      className="xl:px-20 text-center md:text-left"
     >
       <motion.h1
         initial={{ backgroundPosition: "0% 50%" }}
@@ -77,7 +77,7 @@ export default function Hero() {
         className="relative flex justify-center items-center w-full md:w-1/2 h-[55vh] md:h-screen"
       >
         <Image
-          src="/images/pharan-hunter.png"
+          src="/images/phran-hunter.png"
           alt="Pharan Hunter Developer"
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
