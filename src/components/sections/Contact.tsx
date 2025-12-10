@@ -4,7 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import Section from "./Section";
 import { sendMail } from "@/app/actions/sendMail";
-import type { ContactFormState } from "@/types/contact";
+import type { ContactFormState } from "../../types/contact";
 
 // 🧠 สร้าง schema สำหรับตรวจ input
 const contactSchema = z.object({

@@ -1,7 +1,7 @@
 "use server";
 
 import nodemailer from "nodemailer";
-import type { ContactFormState } from "@/types/contact";
+import type { ContactFormState } from "../../types/contact";
 
 export async function sendMail(
   _prevState: ContactFormState,
