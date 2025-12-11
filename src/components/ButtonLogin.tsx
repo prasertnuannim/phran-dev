@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { SocialSignInButton } from "./auth/SocialSignInButton";
 import { FaGithub } from "react-icons/fa";
+import LoginForm from "./auth/LoginForm";
 
 export function ButtonLogin() {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,6 +66,9 @@ export function ButtonLogin() {
                   <p className="mt-2 text-xs text-white/70">
                     By logging in, you agree to our Terms of Service.
                   </p>
+                </div>
+                <div className="flex flex-col justify-center gap-4 p-6 md:p-8 w-full md:w-1/2">
+                  <LoginForm />
                 </div>
               </div>
             </div>
