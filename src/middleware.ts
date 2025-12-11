@@ -23,12 +23,14 @@ export async function middleware(req: NextRequest) {
   const matched = matchProtected(pathname);
   const secret = process.env.NEXTAUTH_SECRET;
   if (!secret) {
+    console.log("Missing NEXTAUTH_SECRET for middleware getToken")
     throw new Error("Missing NEXTAUTH_SECRET for middleware getToken");
   }
   const token = await getToken({ req, secret });
   console.log("token",token);
 
   if (!matched) {
+    console.log("Note matched")
     if (pathname === "/" && token?.role) {
       const redirectPath = resolveRoleRedirectPath(token.role);
       if (redirectPath !== "/") {
@@ -53,6 +55,7 @@ export async function middleware(req: NextRequest) {
       url: resolveRoleRedirectPath(token?.role),
       baseUrl: req.nextUrl.origin,
     });
+    console.log("Note session role")
     return NextResponse.redirect(new URL(fallback, req.nextUrl.origin));
   }
   return NextResponse.next();
