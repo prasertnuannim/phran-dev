@@ -24,26 +24,38 @@ export default function DashboardPage() {
     },
     { range: "day", data: [] }
   );
+
   const [isTransitionPending, startTransition] = useTransition();
 
+  /** ---------------------------------------------
+   *  Initial Load → ทำงานครั้งเดียว ไม่ใช้ state.range
+   * ---------------------------------------------- */
   useEffect(() => {
-    // initial load
-    startTransition(() => loadData(state.range));
-  }, [loadData, startTransition, state.range]);
+    startTransition(() => loadData("day"));
+  }, [loadData, startTransition]); // ไม่มี state.range!
 
+  /** -------------------------------------------------
+   *   Auto Refresh → 30 วินาทีต่อครั้ง เมื่อ range เปลี่ยน
+   * -------------------------------------------------- */
   useEffect(() => {
-    const interval = setInterval(() => startTransition(() => loadData(state.range)), 30000);
+    const interval = setInterval(
+      () => startTransition(() => loadData(state.range)),
+      30000
+    );
     return () => clearInterval(interval);
-  }, [loadData, startTransition, state.range]);
+  }, [state.range, loadData, startTransition]);
 
+  /** Change Range */
   const handleRangeChange = (nextRange: DashboardRange) => {
     startTransition(() => loadData(nextRange));
   };
 
   const latest = state.data.at(-1);
+
   const isTemperatureNormal = latest
     ? latest.temperature >= 24 && latest.temperature <= 32
     : true;
+
   const isHumidityNormal = latest
     ? latest.humidity >= 45 && latest.humidity <= 60
     : true;
@@ -72,7 +84,6 @@ export default function DashboardPage() {
 
       <FilterTabs value={state.range} onChange={handleRangeChange} />
 
-      {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6 mb-10">
         <StatCard
           title="Temperature (°C)"
@@ -88,17 +99,17 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* Chart Container */}
       <div
         className="
-      backdrop-blur-md bg-white/[0.04]
-      border border-white/[0.08]
-      rounded-2xl p-6
-      shadow-[0_0_20px_-5px_rgba(255,255,255,0.1)]
-    "
+          backdrop-blur-md bg-white/[0.04]
+          border border-white/[0.08]
+          rounded-2xl p-6
+          shadow-[0_0_20px_-5px_rgba(255,255,255,0.1)]
+        "
       >
         <TripleChart data={state.data} range={state.range} />
       </div>
+
       {(actionPending || isTransitionPending) && <Loading message="Loading" />}
     </div>
   );
