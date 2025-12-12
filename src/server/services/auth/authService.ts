@@ -123,12 +123,11 @@ const handleSession: AuthCallbacks["session"] = async ({
   return session;
 };
 
-const callbacks = (): AuthCallbacks => ({
+const callbacks: AuthCallbacks = {
   signIn: handleSignIn,
   jwt: handleJWT,
   session: handleSession,
-  redirect: async () => "/",
-});
+};
 
 const getAuthOptions = (): NextAuthConfig => ({
   secret: process.env.NEXTAUTH_SECRET,
@@ -138,9 +137,11 @@ const getAuthOptions = (): NextAuthConfig => ({
     maxAge: resolveSessionMaxAgeSeconds(process.env.SESSION_MAX_AGE),
   },
   experimental: enableWebAuthn ? { enableWebAuthn: true } : undefined,
-  pages: { signIn: "/redirect" },
   providers: providers(),
-  callbacks: callbacks(),
+  callbacks,
+  pages: {
+    signIn: "/", // หรือ /login
+  },
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth(getAuthOptions);
