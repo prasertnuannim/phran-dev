@@ -29,6 +29,8 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret });
   console.log("token",token);
 
+  console.log("MW", { pathname, token });
+
   if (!matched) {
     console.log("Note matched")
     if (pathname === "/" && token?.role) {
