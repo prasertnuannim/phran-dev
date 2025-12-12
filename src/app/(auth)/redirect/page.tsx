@@ -1,14 +1,3 @@
-// import { redirect } from "next/navigation";
-// import { auth } from "@/server/services/auth/authService";
-// import { resolveRoleRedirectPath } from "@/lib/auth/accessRole";
-
-// export default async function Redirect() {
-//   const session = await auth();
-//   const targetPath = resolveRoleRedirectPath(session?.user?.role ?? undefined);
-//   redirect(targetPath);
-// }
-
-
 import { redirect } from "next/navigation";
 import { auth } from "@/server/services/auth/authService";
 import { resolveRoleRedirectPath } from "@/lib/auth/accessRole";
@@ -16,18 +5,15 @@ import { resolveRoleRedirectPath } from "@/lib/auth/accessRole";
 export default async function RedirectPage() {
   const session = await auth();
 
-  // ❌ ยังไม่ login → กลับหน้าแรก
-  if (!session?.user) {
+  if (!session?.user?.role) {
     redirect("/");
   }
 
-  const role = session.user.role;
-  const targetPath = resolveRoleRedirectPath(role);
+  const target = resolveRoleRedirectPath(session.user.role);
 
-  // ✅ กันพลาด
-  if (!targetPath || targetPath === "/redirect") {
+  if (!target || target === "/redirect") {
     redirect("/");
   }
 
-  redirect(targetPath);
+  redirect(target);
 }
