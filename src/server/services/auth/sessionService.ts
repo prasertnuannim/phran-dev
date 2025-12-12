@@ -1,7 +1,7 @@
 import "server-only";
 import type { Session } from "next-auth";
 import type { NextRequest } from "next/server";
-import { auth } from "@/server/services/auth/authService";
+import { auth } from "./authService";
 
 type AuthWithRequest = (req: NextRequest) => Promise<Session | null>;
 
