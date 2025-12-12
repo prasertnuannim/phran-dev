@@ -16,6 +16,7 @@ import {
   authorizeWithCredentialsService,
 } from "@/server/services/auth/authUserService";
 import { resolveSessionMaxAgeSeconds } from "@/server/services/auth/sessionService";
+import { normalizeAccessRole } from "@/lib/auth/accessRole";
 
 declare module "next-auth" {
   interface Session {
@@ -72,44 +73,50 @@ const providers = (): NextAuthConfig["providers"] => {
   return providerList;
 };
 
-const handleSignIn: AuthCallbacks["signIn"] = async ({ user, account }: AuthSignInCallbackParams) => {
+const handleSignIn: AuthCallbacks["signIn"] = async ({ user, account }) => {
   if (!user.email || !account?.provider) return false;
-  if (account.provider === "credentials") return true;
-  await authUserService.findOrCreate(
-    { id: user.id, email: user.email, name: user.name, image: user.image },
-    account,
-  );
+
+  if (account.provider !== "credentials") {
+    await authUserService.findOrCreate(
+      { id: user.id, email: user.email, name: user.name, image: user.image },
+      account,
+    );
+  }
 
   return true;
 };
+
 
 const handleJWT: AuthCallbacks["jwt"] = async ({
   token,
   user,
   account,
 }: AuthJwtCallbackParams): Promise<JWT> => {
-  if (user) token.email = user.email ?? token.email;
-  console.log("[JWT]", { token, user, account });
-  if (account?.provider && ["github", "google"].includes(account.provider)) {
+
+  if (user?.email) {
+    token.email = user.email;
+  }
+
+  // 🔥 ดึงจาก DB ทุก provider (นิ่งที่สุด)
+  if (user?.email) {
     const dbUser = await prisma.user.findUnique({
-      where: { email: user?.email ?? "" },
+      where: { email: user.email },
       include: { role: true },
     });
+
     if (dbUser) {
       token.id = dbUser.id;
-      token.role = dbUser.role?.name ?? dbUser.roleId ?? null;
-      token.picture = dbUser.image ?? token.picture ?? null;
+      token.role = normalizeAccessRole(
+        dbUser.role?.name ?? dbUser.roleId ?? null
+      );
+      token.picture = dbUser.image ?? null;
     }
   }
 
-  if (account?.provider === "credentials" && user) {
-    token.id = user.id;
-    token.role = user.role ?? null;
-    token.picture = user.image ?? null;
-  }
-
+  console.log("[JWT][FINAL]", token);
   return token;
 };
+
 
 const handleSession: AuthCallbacks["session"] = async ({
   session,
