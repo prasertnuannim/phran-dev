@@ -119,3 +119,11 @@ const authOptions: NextAuthConfig = {
 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);
+
+// Re-export role helpers for convenience across the app
+export {
+  AccessRole,
+  ROLE_REDIRECT_MAP,
+  resolveRoleRedirectPath,
+  normalizeAccessRole as normalizeRole,
+} from "@/lib/auth/accessRole";
