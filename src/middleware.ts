@@ -27,7 +27,8 @@ export async function middleware(req: NextRequest) {
     throw new Error("Missing NEXTAUTH_SECRET for middleware getToken");
   }
   const token = await getToken({ req, secret });
-  console.log("token",token);
+  console.log("[MW]", req.nextUrl.pathname, token);
+
 
   if (!matched) {
     console.log("Note matched")
@@ -66,6 +67,7 @@ export async function middleware(req: NextRequest) {
 //     "/((?!api/auth|_next/static|_next/image|favicon.ico).*)",
 //   ],
 // };
+
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],

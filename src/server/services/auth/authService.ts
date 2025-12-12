@@ -89,7 +89,7 @@ const handleJWT: AuthCallbacks["jwt"] = async ({
   account,
 }: AuthJwtCallbackParams): Promise<JWT> => {
   if (user) token.email = user.email ?? token.email;
-
+  console.log("[JWT]", { token, user, account });
   if (account?.provider && ["github", "google"].includes(account.provider)) {
     const dbUser = await prisma.user.findUnique({
       where: { email: user?.email ?? "" },
@@ -115,6 +115,7 @@ const handleSession: AuthCallbacks["session"] = async ({
   session,
   token,
 }: AuthSessionCallbackParams) => {
+  console.log("[SESSION]", { session, token });
   if (session.user) {
     session.user.id = token.id as string;
     session.user.role = token.role as string;
