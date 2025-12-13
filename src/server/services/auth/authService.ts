@@ -123,15 +123,21 @@ const handleSession: AuthCallbacks["session"] = async ({
   session,
   token,
 }: AuthSessionCallbackParams) => {
-  console.log("[SESSION]", { session, token });
   const resolvedRole = normalizeAccessRole(token.role) ?? AccessRole.Guest;
-  if (session.user) {
-    session.user.id = token.id as string;
-    session.user.role = resolvedRole;
-    session.user.image = (token.picture as string) ?? session.user.image;
-  }
-  session.role = resolvedRole;
-  return session;
+  const resolvedSession: typeof session = {
+    ...session,
+    user: session.user
+      ? {
+          ...session.user,
+          id: token.id as string,
+          role: resolvedRole,
+          image: (token.picture as string) ?? session.user.image,
+        }
+      : session.user,
+    role: resolvedRole,
+  };
+  console.log("[SESSION]", { session: resolvedSession, token });
+  return resolvedSession;
 };
 
 const callbacks: AuthCallbacks = {
