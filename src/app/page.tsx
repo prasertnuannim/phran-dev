@@ -7,16 +7,18 @@ import { redirect } from "next/navigation";
 
 export default async function Page() {
 
-   const session = await auth();
-    const targetPath = resolveRoleRedirectPath(session?.user?.role ?? undefined);
-    console.log("Can access in redirect")
+  const session = await auth();
+  const targetPath = resolveRoleRedirectPath(session?.user?.role ?? undefined);
+
+  if (targetPath !== "/") {
     redirect(targetPath);
-    
-  // return (
-  //   <main className="snap-y snap-mandatory overflow-y-auto scroll-smooth">
-  //     <Hero />
-  //     <About />
-  //     <Contact />
-  //   </main>
-  // );
+  }
+
+  return (
+    <main className="snap-y snap-mandatory overflow-y-auto scroll-smooth">
+      <Hero />
+      <About />
+      <Contact />
+    </main>
+  );
 }
