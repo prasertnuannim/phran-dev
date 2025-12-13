@@ -40,17 +40,14 @@ export const SessionService = {
   hasRole,
 };
 
-/** ✅ ใช้ใน Server Component หรือ API Route */
 export async function getServerAuthSession(request?: NextRequest): Promise<Session | null> {
   return getSession(request);
 }
 
-/** ✅ ดึงเฉพาะ user */
 export async function getSessionUser(request?: NextRequest) {
   return getUser(request);
 }
 
-/** ✅ บังคับให้ต้องมี session (เช่นใน Protected API) */
 export async function requireServerAuthSession(request?: NextRequest): Promise<Session> {
   const session = await getServerAuthSession(request);
   if (!session) {

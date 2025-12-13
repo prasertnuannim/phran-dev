@@ -3,6 +3,7 @@ import { auth, resolveRoleRedirectPath } from "@/server/services/auth/authServic
 
 export default async function Redirect() {
   const session = await auth();
+   console.log("session >>> ",session)
   const targetPath = resolveRoleRedirectPath(session?.user?.role ?? undefined);
   redirect(targetPath);
 }

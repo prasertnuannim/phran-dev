@@ -23,6 +23,7 @@ declare module "next-auth" {
       id?: string;
       role?: AccessRole | null;
     } & DefaultSession["user"];
+    role?: AccessRole | null;
   }
 
   interface User {
@@ -123,11 +124,13 @@ const handleSession: AuthCallbacks["session"] = async ({
   token,
 }: AuthSessionCallbackParams) => {
   console.log("[SESSION]", { session, token });
+  const resolvedRole = normalizeAccessRole(token.role) ?? AccessRole.Guest;
   if (session.user) {
     session.user.id = token.id as string;
-    session.user.role = normalizeAccessRole(token.role) ?? AccessRole.Guest;
+    session.user.role = resolvedRole;
     session.user.image = (token.picture as string) ?? session.user.image;
   }
+  session.role = resolvedRole;
   return session;
 };
 

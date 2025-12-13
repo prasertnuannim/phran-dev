@@ -28,13 +28,14 @@ export async function middleware(req: NextRequest) {
   }
   const token = await getToken({ req, secret });
   console.log("[MW]", req.nextUrl.pathname, token);
+  
 
 
   if (!matched) {
     console.log("[MW] Note matched public route:", pathname);
     if (pathname === "/" && token?.role) {
       const redirectPath = resolveRoleRedirectPath(token.role);
-      if (redirectPath !== "/") {
+      if (redirectPath && redirectPath !== pathname) {
         const target = resolveAuthRedirect({
           url: redirectPath,
           baseUrl: req.nextUrl.origin,
@@ -49,6 +50,7 @@ export async function middleware(req: NextRequest) {
     loginUrl.searchParams.set("next", pathname + nextUrl.search);
     return NextResponse.redirect(loginUrl);
   }
+  
   const allowed = ACCESS_RULES[matched];
   const sessionRole = normalizeAccessRole(token.role);
   if (!sessionRole || !allowed.includes(sessionRole)) {
