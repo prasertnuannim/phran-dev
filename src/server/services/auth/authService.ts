@@ -16,18 +16,18 @@ import {
   authorizeWithCredentialsService,
 } from "@/server/services/auth/authUserService";
 import { resolveSessionMaxAgeSeconds } from "@/server/services/auth/sessionService";
-import { normalizeAccessRole } from "@/lib/auth/accessRole";
+import { AccessRole, normalizeAccessRole } from "@/lib/auth/accessRole";
 
 declare module "next-auth" {
   interface Session {
     user?: {
       id?: string;
-      role?: string | null;
+      role?: AccessRole | null;
     } & DefaultSession["user"];
   }
 
   interface User {
-    role?: string | null;
+    role?: AccessRole | null;
     image?: string | null;
   }
 }
@@ -35,7 +35,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     id?: string;
-    role?: string | null;
+    role?: AccessRole | null;
     picture?: string | null;
     email?: string | null;
   }
@@ -86,7 +86,20 @@ const handleSignIn: AuthCallbacks["signIn"] = async ({ user, account }) => {
   return true;
 };
 
-const handleJWT: AuthCallbacks["jwt"] = async ({ token, user }) => {
+
+const handleJWT: AuthCallbacks["jwt"] = async ({
+  token,
+  user,
+  account,
+}: AuthJwtCallbackParams): Promise<JWT> => {
+
+  let resolvedRole = normalizeAccessRole(token.role);
+
+  if (user?.email) {
+    token.email = user.email;
+  }
+
+  // 🔥 ดึงจาก DB ทุก provider (นิ่งที่สุด)
   if (user?.email) {
     const dbUser = await prisma.user.findUnique({
       where: { email: user.email },
@@ -95,47 +108,17 @@ const handleJWT: AuthCallbacks["jwt"] = async ({ token, user }) => {
 
     if (dbUser) {
       token.id = dbUser.id;
-      token.role = normalizeAccessRole(
-        dbUser.role?.name ?? dbUser.roleId ?? null
-      );
+      resolvedRole =
+        normalizeAccessRole(dbUser.role?.name ?? dbUser.roleId ?? null) ??
+        resolvedRole;
       token.picture = dbUser.image ?? null;
-      token.email = dbUser.email;
     }
   }
 
+  token.role = resolvedRole ?? AccessRole.Guest;
+  console.log("[JWT][FINAL]", token);
   return token;
 };
-
-
-// const handleJWT: AuthCallbacks["jwt"] = async ({
-//   token,
-//   user,
-//   account,
-// }: AuthJwtCallbackParams): Promise<JWT> => {
-
-//   if (user?.email) {
-//     token.email = user.email;
-//   }
-
-//   // 🔥 ดึงจาก DB ทุก provider (นิ่งที่สุด)
-//   if (user?.email) {
-//     const dbUser = await prisma.user.findUnique({
-//       where: { email: user.email },
-//       include: { role: true },
-//     });
-
-//     if (dbUser) {
-//       token.id = dbUser.id;
-//       token.role = normalizeAccessRole(
-//         dbUser.role?.name ?? dbUser.roleId ?? null
-//       );
-//       token.picture = dbUser.image ?? null;
-//     }
-//   }
-
-//   console.log("[JWT][FINAL]", token);
-//   return token;
-// };
 
 const handleSession: AuthCallbacks["session"] = async ({
   session,
@@ -144,7 +127,7 @@ const handleSession: AuthCallbacks["session"] = async ({
   console.log("[SESSION]", { session, token });
   if (session.user) {
     session.user.id = token.id as string;
-    session.user.role = token.role as string;
+    session.user.role = normalizeAccessRole(token.role) ?? AccessRole.Guest;
     session.user.image = (token.picture as string) ?? session.user.image;
   }
   return session;
