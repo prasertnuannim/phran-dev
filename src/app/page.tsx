@@ -1,15 +1,22 @@
-"use client";
 
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import Contact from "@/components/sections/Contact";
+import { auth, resolveRoleRedirectPath } from "@/server/services/auth/authService";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return (
-    <main className="snap-y snap-mandatory overflow-y-auto scroll-smooth">
-      <Hero />
-      <About />
-      <Contact />
-    </main>
-  );
+export default async function Page() {
+
+   const session = await auth();
+    const targetPath = resolveRoleRedirectPath(session?.user?.role ?? undefined);
+    console.log("Can access in redirect")
+    redirect(targetPath);
+    
+  // return (
+  //   <main className="snap-y snap-mandatory overflow-y-auto scroll-smooth">
+  //     <Hero />
+  //     <About />
+  //     <Contact />
+  //   </main>
+  // );
 }
