@@ -86,18 +86,7 @@ const handleSignIn: AuthCallbacks["signIn"] = async ({ user, account }) => {
   return true;
 };
 
-
-const handleJWT: AuthCallbacks["jwt"] = async ({
-  token,
-  user,
-  account,
-}: AuthJwtCallbackParams): Promise<JWT> => {
-
-  if (user?.email) {
-    token.email = user.email;
-  }
-
-  // 🔥 ดึงจาก DB ทุก provider (นิ่งที่สุด)
+const handleJWT: AuthCallbacks["jwt"] = async ({ token, user }) => {
   if (user?.email) {
     const dbUser = await prisma.user.findUnique({
       where: { email: user.email },
@@ -110,13 +99,43 @@ const handleJWT: AuthCallbacks["jwt"] = async ({
         dbUser.role?.name ?? dbUser.roleId ?? null
       );
       token.picture = dbUser.image ?? null;
+      token.email = dbUser.email;
     }
   }
 
-  console.log("[JWT][FINAL]", token);
   return token;
 };
 
+
+// const handleJWT: AuthCallbacks["jwt"] = async ({
+//   token,
+//   user,
+//   account,
+// }: AuthJwtCallbackParams): Promise<JWT> => {
+
+//   if (user?.email) {
+//     token.email = user.email;
+//   }
+
+//   // 🔥 ดึงจาก DB ทุก provider (นิ่งที่สุด)
+//   if (user?.email) {
+//     const dbUser = await prisma.user.findUnique({
+//       where: { email: user.email },
+//       include: { role: true },
+//     });
+
+//     if (dbUser) {
+//       token.id = dbUser.id;
+//       token.role = normalizeAccessRole(
+//         dbUser.role?.name ?? dbUser.roleId ?? null
+//       );
+//       token.picture = dbUser.image ?? null;
+//     }
+//   }
+
+//   console.log("[JWT][FINAL]", token);
+//   return token;
+// };
 
 const handleSession: AuthCallbacks["session"] = async ({
   session,
