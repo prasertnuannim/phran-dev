@@ -9,7 +9,6 @@ import type {
   AuthCallbacks,
   AuthJwtCallbackParams,
   AuthSessionCallbackParams,
-  AuthSignInCallbackParams,
 } from "@/types/auth.type";
 import {
   authUserService,
@@ -90,7 +89,6 @@ const handleSignIn: AuthCallbacks["signIn"] = async ({ user, account }) => {
 const handleJWT: AuthCallbacks["jwt"] = async ({
   token,
   user,
-  account,
 }: AuthJwtCallbackParams): Promise<JWT> => {
 
   let resolvedRole = normalizeAccessRole(token.role);

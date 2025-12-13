@@ -3,6 +3,7 @@ import type { User as PrismaUser, PrismaClient } from "@prisma/client";
 import { prisma } from "@/server/db/auth/client";
 import { LoginCredentialsInput } from "@/types/auth.type";
 import bcrypt from "bcryptjs";
+import { AccessRole, normalizeAccessRole } from "@/lib/auth/accessRole";
 
 type AuthUser = Pick<NextAuthUser, "email" | "name" | "image"> & { id?: string | null };
 
@@ -97,7 +98,7 @@ const authorizeWithCredentials = async (
     id: user.id,
     name: user.name,
     email: user.email,
-    role: user.role?.name ?? user.roleId ?? null,
+    role: normalizeAccessRole(user.role?.name ?? user.roleId) ?? AccessRole.Guest,
     image: user.image,
   };
 };

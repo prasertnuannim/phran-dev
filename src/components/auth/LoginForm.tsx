@@ -2,7 +2,6 @@
 
 import { useActionState } from "react";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { SubmitButton } from "@/components/form/submitButton";
 import FormInput from "@/components/form/formInput";
 import { LoginFormState } from "@/types/auth.type";
