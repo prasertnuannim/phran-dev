@@ -115,7 +115,7 @@ const handleJWT: AuthCallbacks["jwt"] = async ({
   }
 
   token.role = resolvedRole ?? AccessRole.Guest;
-  console.log("[JWT][FINAL]", token);
+  //console.log("[JWT][FINAL]", token);
   return token;
 };
 
@@ -136,7 +136,7 @@ const handleSession: AuthCallbacks["session"] = async ({
       : session.user,
     role: resolvedRole,
   };
-  console.log("[SESSION]", { session: resolvedSession, token });
+  //console.log("[SESSION]", { session: resolvedSession, token });
   return resolvedSession;
 };
 

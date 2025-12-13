@@ -97,6 +97,17 @@ export async function middleware(req: NextRequest) {
 
   const token = await getToken({ req, secret });
   const role = normalizeAccessRole(token?.role);
+  const session = token
+    ? {
+        email: token.email,
+        name: token.name,
+        role: token.role,
+        exp: token.exp,
+      }
+    : null;
+
+  console.log("[middleware] session:", session);
+  console.log("[middleware] token:", token);
 
   // =========================
   // 1️⃣ PUBLIC ROUTES
