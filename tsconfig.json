@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "ignoreDeprecations": "5.0",
     "target": "ES2017",
     "lib": [
       "dom",
@@ -14,7 +13,6 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
-    "baseUrl": ".",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -27,15 +25,6 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "@radix-ui/*": [
-        ".tmp-node-mods/node_modules/@radix-ui/*"
-      ],
-      "leaflet": [
-        ".tmp-node-mods/node_modules/leaflet"
-      ],
-      "leaflet/*": [
-        ".tmp-node-mods/node_modules/leaflet/*"
       ]
     }
   },
