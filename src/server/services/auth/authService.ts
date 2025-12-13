@@ -156,7 +156,7 @@ const getAuthOptions = (): NextAuthConfig => ({
   providers: providers(),
   callbacks,
   pages: {
-    signIn: "/redirect",
+    signIn: "/",
   },
 });
 
