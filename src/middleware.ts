@@ -31,7 +31,7 @@ export async function middleware(req: NextRequest) {
 
 
   if (!matched) {
-    console.log("Note matched")
+    console.log("[MW] Note matched public route:", pathname);
     if (pathname === "/" && token?.role) {
       const redirectPath = resolveRoleRedirectPath(token.role);
       if (redirectPath !== "/") {
@@ -62,13 +62,13 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// export const config = {
-//   matcher: [
-//     "/((?!api/auth|_next/static|_next/image|favicon.ico).*)",
-//   ],
-// };
-
-
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!api/auth|_next/static|_next/image|favicon.ico).*)",
+  ],
 };
+
+
+// export const config = {
+//   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+// };
