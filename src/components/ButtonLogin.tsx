@@ -44,13 +44,13 @@ export function ButtonLogin() {
               <div className="flex flex-col justify-center gap-4 p-8 md:w-1/2 bg-white/5 backdrop-blur-lg text-gray-100">
                 <h2 className="text-2xl font-semibold mb-2">Login</h2>
 
-                <SocialSignInButton />
+                {/* <SocialSignInButton />
 
                 <SocialSignInButton
                   provider="github"
                   label="Continue with GitHub"
                   icon={<FaGithub className="w-5 h-5 mr-2" />}
-                />
+                /> */}
 
                 <p className="mt-3 text-xs text-gray-300">
                   By logging in, you agree to our Terms of Service.
