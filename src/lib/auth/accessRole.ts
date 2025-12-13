@@ -28,6 +28,7 @@ export function normalizeAccessRole(role?: string | null): AccessRole | undefine
 
 
 export function resolveRoleRedirectPath(role?: AccessRole | null): string {
+  console.log("Access role >> ", role)
   switch (role) {
     case AccessRole.Admin:
       return "/admin";
