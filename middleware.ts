@@ -5,7 +5,10 @@ import {
   normalizeAccessRole,
   resolveRoleRedirectPath,
 } from "@/lib/auth/accessRole";
-import { ACCESS_RULES, matchProtectedPath } from "./server/services/auth/accessControl";
+import {
+  ACCESS_RULES,
+  matchProtectedPath,
+} from "@/server/services/auth/accessControl";
 
 export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
@@ -20,6 +23,16 @@ export async function middleware(req: NextRequest) {
 
   const token = await getToken({ req, secret });
   const role = normalizeAccessRole(token?.role);
+  const session = token
+    ? {
+        email: token.email,
+        name: token.name,
+        role: token.role,
+        exp: token.exp,
+      }
+    : null;
+  console.log("[middleware] session:", session);
+  console.log("[middleware] token:", token);
 
   if (!matched) {
     if (pathname === "/" && role) {
@@ -46,7 +59,6 @@ export async function middleware(req: NextRequest) {
       new URL(fallback ?? "/", req.nextUrl.origin),
     );
   }
-console.log("token> ", {token, role})
   return NextResponse.next();
 }
 
