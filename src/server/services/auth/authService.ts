@@ -115,7 +115,6 @@ const handleJWT: AuthCallbacks["jwt"] = async ({
   }
 
   token.role = resolvedRole ?? AccessRole.Guest;
-  //console.log("[JWT][FINAL]", token);
   return token;
 };
 
@@ -157,7 +156,7 @@ const getAuthOptions = (): NextAuthConfig => ({
   providers: providers(),
   callbacks,
   pages: {
-    signIn: "/", // หรือ /login
+    signIn: "/redirect",
   },
 });
 
