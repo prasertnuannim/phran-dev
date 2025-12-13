@@ -57,7 +57,7 @@ export async function middleware(req: NextRequest) {
   // =========================
   const token = await getToken({ req, secret });
   const role = normalizeAccessRole(token?.role);
-
+console.log("token>> ", token)
   if (DEBUG) {
     log.info("auth", {
       hasToken: Boolean(token),
