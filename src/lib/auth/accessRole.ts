@@ -25,20 +25,3 @@ export function normalizeAccessRole(role?: string | null): AccessRole | undefine
 export function resolveRoleRedirectPath(role?: AccessRole | null): string {
   return ROLE_REDIRECT_MAP[role ?? AccessRole.Guest] ?? "/";
 }
-
-
-// export function resolveRoleRedirectPath(role?: AccessRole | null): string {
-//   console.log("Access role >> ", role)
-//   switch (role) {
-//     case AccessRole.Admin:
-//       return "/admin";
-//     case AccessRole.User:
-//       return "/dashboard";
-//     case AccessRole.Doctor:
-//       return "/doctor";
-//     case AccessRole.Nurse:
-//       return "/nurse";
-//     default:
-//       return "/";
-//   }
-// }
