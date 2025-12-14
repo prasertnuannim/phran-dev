@@ -22,23 +22,23 @@ export function normalizeAccessRole(role?: string | null): AccessRole | undefine
   return ACCESS_ROLE_SET.has(candidate) ? candidate : undefined;
 }
 
-// export function resolveRoleRedirectPath(role?: string | null) {
-//   return ROLE_REDIRECT_MAP[normalizeAccessRole(role) ?? AccessRole.Guest];
-// }
-
-
 export function resolveRoleRedirectPath(role?: AccessRole | null): string {
-  console.log("Access role >> ", role)
-  switch (role) {
-    case AccessRole.Admin:
-      return "/admin";
-    case AccessRole.User:
-      return "/dashboard";
-    case AccessRole.Doctor:
-      return "/doctor";
-    case AccessRole.Nurse:
-      return "/nurse";
-    default:
-      return "/";
-  }
+  return ROLE_REDIRECT_MAP[role ?? AccessRole.Guest] ?? "/";
 }
+
+
+// export function resolveRoleRedirectPath(role?: AccessRole | null): string {
+//   console.log("Access role >> ", role)
+//   switch (role) {
+//     case AccessRole.Admin:
+//       return "/admin";
+//     case AccessRole.User:
+//       return "/dashboard";
+//     case AccessRole.Doctor:
+//       return "/doctor";
+//     case AccessRole.Nurse:
+//       return "/nurse";
+//     default:
+//       return "/";
+//   }
+// }
