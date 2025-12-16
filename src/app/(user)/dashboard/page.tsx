@@ -71,14 +71,21 @@ export default function DashboardPage() {
   return (
     <div
       className="
-        min-h-screen px-6 pt-10
-        bg-gradient-to-b from-black/40 to-black/20
+        relative overflow-hidden
+        min-h-screen px-6 pt-5
+        bg-gradient-to-t from-sky-200 to-gray-200 shadow-lg
         backdrop-blur-2xl
         text-white/90
         font-[450] rounded-lg
       "
     >
-      <h1 className="text-3xl font-semibold tracking-tight mb-8 text-white">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 shadow-md"
+      >
+      </div>
+
+      <h1 className="text-3xl font-semibold tracking-tight mb-8 text-gray-500">
         Smart Home Monitor
       </h1>
 
@@ -102,9 +109,8 @@ export default function DashboardPage() {
       <div
         className="
           backdrop-blur-md bg-white/[0.04]
-          border border-white/[0.08]
-          rounded-2xl p-6
-          shadow-[0_0_20px_-5px_rgba(255,255,255,0.1)]
+          rounded-2xl
+          shadow-xl
         "
       >
         <TripleChart data={state.data} range={state.range} />

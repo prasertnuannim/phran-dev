@@ -2,29 +2,34 @@ import { StatCardProps } from "@/types/dashboard";
 
 type Props = StatCardProps;
 
+const COLOR_MAP: Record<string, string> = {
+  red: "text-red-400",
+  orange: "text-orange-400",
+  blue: "text-blue-400",
+  emerald: "text-emerald-400",
+};
+
 export function StatCard({ title, value, color, delay }: Props) {
-const colorClass =
-  color === "red"
-    ? "text-red-400 font-semibold"
-    : color === "orange"
-    ? "text-orange-400 font-semibold"
-    : color === "blue"
-    ? "text-blue-400 font-semibold"
-    : "text-emerald-400 font-semibold";
+  const colorClass = COLOR_MAP[color] ?? "text-emerald-400";
 
   return (
     <div
-      className="
-        backdrop-blur-md bg-white/[0.04]
-        border border-white/[0.08]
-        rounded-2xl p-5
-        transition-all duration-300
-        shadow-[0_0_20px_-5px_rgba(255,255,255,0.08)]
-        hover:bg-white/[0.07] hover:border-white/[0.12]
-      "
+className="
+  relative group
+  backdrop-blur-xl bg-gradient-to-r from-sky-200 to-gray-200
+  rounded-2xl p-5
+  transition-all duration-300 ease-out
+  shadow-xl
+  hover:border-white/[0.14]
+  hover:-translate-y-1
+"
+
       style={{ animationDelay: delay }}
     >
-      <p className="text-sm text-white/60 mb-1">{title}</p>
+      <p className="text-sm text-white tracking-wide mb-1">
+        {title}
+      </p>
+
       <h2 className={`text-3xl font-semibold tracking-tight ${colorClass}`}>
         {value}
       </h2>

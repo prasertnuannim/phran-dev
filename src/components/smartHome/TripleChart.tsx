@@ -31,7 +31,7 @@ export function TripleChart({ data, range }: TripleChartProps) {
 
     return (
         <div className="w-full h-[300px] md:h-[400px]
-                    backdrop-blur-xl bg-white/5
+                    backdrop-blur-xl bg-white
                     rounded-2xl p-4 border border-white/10">
             {/* Temperature shifts to green when within range, red when out-of-range */}
 
