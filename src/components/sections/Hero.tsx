@@ -82,6 +82,7 @@ export default function Hero() {
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
           className="object-contain object-center drop-shadow-[0_10px_20px_rgba(0,0,0,0.1)]"
+          loading="eager"
           priority
         />
       </motion.div>

@@ -15,7 +15,7 @@ export default function Loading({ message }: LoadingProps) {
       className="
         fixed inset-0 z-50 
         flex flex-col justify-center items-center gap-4
-        bg-black/30 backdrop-blur-md
+        backdrop-blur-md
       "
     >
       {/* Bouncing dots */}
