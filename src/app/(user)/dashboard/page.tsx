@@ -7,6 +7,7 @@ import { StatCard } from "@/components/smartHome/StatCard";
 import { TripleChart } from "@/components/smartHome/TripleChart";
 import { getSensorData } from "./action";
 import Loading from "@/components/form/loading";
+import { RefreshCw } from "lucide-react";
 
 type DashboardActionState = {
   range: DashboardRange;
@@ -34,16 +35,9 @@ export default function DashboardPage() {
     startTransition(() => loadData("day"));
   }, [loadData, startTransition]); // ไม่มี state.range!
 
-  /** -------------------------------------------------
-   *   Auto Refresh → 30 วินาทีต่อครั้ง เมื่อ range เปลี่ยน
-   * -------------------------------------------------- */
-  useEffect(() => {
-    const interval = setInterval(
-      () => startTransition(() => loadData(state.range)),
-      30000
-    );
-    return () => clearInterval(interval);
-  }, [state.range, loadData, startTransition]);
+  const handleRefresh = () => {
+    startTransition(() => loadData(state.range));
+  };
 
   /** Change Range */
   const handleRangeChange = (nextRange: DashboardRange) => {
@@ -82,14 +76,37 @@ export default function DashboardPage() {
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 shadow-md"
-      >
-      </div>
+      ></div>
 
       <h1 className="text-3xl font-semibold tracking-tight mb-8 text-gray-500">
         Smart Home Monitor
       </h1>
 
-      <FilterTabs value={state.range} onChange={handleRangeChange} />
+      <div className="flex items-center gap-4">
+        <FilterTabs value={state.range} onChange={handleRangeChange} />
+
+        <button
+          type="button"
+          onClick={handleRefresh}
+          disabled={actionPending || isTransitionPending}
+          className="
+      group flex h-10 w-10 items-center justify-center rounded-full
+      bg-white/80 shadow hover:bg-white transition text-gray-700
+      disabled:opacity-60 disabled:cursor-not-allowed
+      hover:shadow-md hover:scale-[1.03]
+    "
+          aria-label="Refresh"
+        >
+          <RefreshCw
+            className="
+        h-5 w-5
+        transition-transform duration-500 ease-out
+        group-hover:rotate-180
+      "
+            aria-hidden
+          />
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6 mb-10">
         <StatCard

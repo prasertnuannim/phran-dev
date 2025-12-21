@@ -1,98 +1,16 @@
-// "use client";
 
-// import { useState } from "react";
-// import { ChevronLeft, ChevronRight, Settings, User } from "lucide-react";
-// import clsx from "clsx";
-// import Link from "next/link";
-// import { usePathname } from "next/navigation";
-
-// export default function Sidebar() {
-//   const pathname = usePathname();
-//   const [isExpanded, setIsExpanded] = useState(false);
-
-//   const menuItems = [
-//     { icon: <User size={20} />, label: "Accounts", href: "/account" },
-//     {
-//       icon: <Settings size={20} />,
-//       label: "Auth",
-//       href: "/auth-settings",
-//     },
-//   ];
-
-//   return (
-//     <div
-//       className={clsx(
-//         "h-screen bg-gray-800 text-white transition-all duration-300 flex flex-col",
-//         isExpanded ? "w-54" : "w-16"
-//       )}
-//     >
-//       {/* Toggle Button */}
-//       <div className="flex items-center justify-between py-3 px-1 verflow-visible">
-//         <span
-//           className={clsx(
-//             "text-xl font-bold transition-opacity",
-//             !isExpanded && "opacity-0"
-//           )}
-//         >
-//           MyApp
-//         </span>
-//         <button
-//           onClick={() => setIsExpanded((prev) => !prev)}
-//           className={`
-//     z-10 p-1 rounded-full
-//     transition-all duration-200 ease-out
-//     shadow-sm hover:shadow
-//     ${
-//       isExpanded
-//         ? "bg-white text-gray-800 hover:bg-gray-400 hover:text-white"
-//         : "bg-white text-gray-800 hover:bg-gray-400 hover:text-white"
-//     }
-//   `}
-//         >
-//           {isExpanded ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
-//         </button>
-//       </div>
-
-//       {/* Menu Items */}
-//       <ul className="flex-1 space-y-2 mt-4 px-2">
-//         {menuItems.map((item, i) => (
-//           <li key={i}>
-//             <Link
-//               href={item.href}
-//               className={clsx(
-//                 "group relative flex gap-4 px-3 py-2 hover:bg-gray-700 rounded transition-colors",
-//                 !isExpanded && "items-center justify-center",
-//                 pathname === item.href && "bg-gray-700 font-semibold"
-//               )}
-//             >
-//               {item.icon}
-//               {isExpanded && <span>{item.label}</span>}
-
-//               {/* Tooltip when collapsed */}
-//               {!isExpanded && (
-//                 <span className="absolute left-full ml-2 hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded z-10 whitespace-nowrap">
-//                   {item.label}
-//                 </span>
-//               )}
-//             </Link>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
 
 "use client";
 
 import { useState, type ReactNode } from "react";
 import {
-    Home,
-    BarChart,
     Layers,
     CheckCircle,
     Clock,
     ChevronDown,
     Power,
+    Settings,
+    User,
 } from "lucide-react";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
@@ -144,10 +62,9 @@ export default function Sidebar({ profile }: { profile: SidebarProfile | null })
         <div
             className={clsx(
                 "bg-gray-300 h-screen flex flex-col transition-all duration-500 rounded-2xl p-5 shadow-xl",
-                open ? "w-72" : "w-20"
+                open ? "w-74" : "w-20"
             )}
         >
-            {/* Avatar */}
             <div className={clsx("flex flex-col items-center transition-all", open ? "mt-5 mb-6" : "mt-5 mb-5")}>
                 <Avatar
                     className={clsx(
@@ -185,24 +102,20 @@ export default function Sidebar({ profile }: { profile: SidebarProfile | null })
             {open ? (
                 <>
                     <p className="text-white/70 text-xs mt-6 mb-3 uppercase tracking-wide">Favourites</p>
-
                     <div className="flex flex-col space-y-2">
-
-                        {/* HOME */}
                         <MenuItem
                             href="/account"
-                            icon={<Home size={20} />}
+                            icon={<User size={20} />}
                             label="Accounts"
-                            active={pathname === "/"}
+                            active={pathname.startsWith("/account")}
                             open={open}
                         />
 
-                        {/* DASHBOARD */}
                         <MenuItem
                             href="/auth-settings"
-                            icon={<BarChart size={20} />}
+                            icon={<Settings size={20} />}
                             label="Settings"
-                            active={pathname.startsWith("/dashboard")}
+                            active={pathname.startsWith("/auth-settings")}
                             open={open}
                         />
                     </div>
@@ -281,12 +194,16 @@ export default function Sidebar({ profile }: { profile: SidebarProfile | null })
                 <>
                     <div className="flex flex-col items-center space-y-6 mt-4">
 
-                        <IconBtn href="/" icon={<Home size={22} />} active={pathname === "/"} />
+                        <IconBtn
+                            href="/account"
+                            icon={<User size={22} />}
+                            active={pathname.startsWith("/account")}
+                        />
 
                         <IconBtn
-                            href="/dashboard"
-                            icon={<BarChart size={22} />}
-                            active={pathname.startsWith("/dashboard")}
+                            href="/auth-settings"
+                            icon={<Settings size={22} />}
+                            active={pathname.startsWith("/auth-settings")}
                         />
 
                         <IconBtn
@@ -317,8 +234,9 @@ export default function Sidebar({ profile }: { profile: SidebarProfile | null })
                     icon={<Power size={20} className="text-white" />}
                     showText={open}
                     text="Sign Out"
+                    variant="ghost"
                     className={clsx(
-                        "w-full bg-transparent hover:bg-white/20 border-0 px-2 py-2 rounded-xl transition text-white/90",
+                        "w-full border-0 px-2 py-2 rounded-xl transition",
                         open ? "justify-start" : "justify-center"
                     )}
                 />
@@ -326,10 +244,6 @@ export default function Sidebar({ profile }: { profile: SidebarProfile | null })
         </div>
     );
 }
-
-/* ---------------------------------------------------------------------- */
-/* COMPONENTS */
-/* ---------------------------------------------------------------------- */
 
 type MenuItemProps = {
     href: string;
