@@ -23,20 +23,10 @@ export default function About() {
           leading-relaxed tracking-normal
         "
       >
-        <h2
-          className="
-            text-4xl md:text-5xl font-bold mb-8
-            bg-gradient-to-r from-[#b88a1a] via-[#d4a017] to-[#c79a3b]
-            bg-clip-text text-transparent
-          "
-        >
-          Phran Dev About
-        </h2>
-
         <p className="text-lg md:text-xl text-[#3a3a3a] mb-6">
           <motion.span
             className="relative font-bold bg-gradient-to-r from-[#b88a1a] via-[#f5d76e] to-[#c79a3b]
-               bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient-x text-[1.8rem] md:text-4xl pr-2"
+               bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient-x text-[2.5rem] md:text-4xl pr-2"
             initial={{ backgroundPositionX: "0%" }}
             animate={{ backgroundPositionX: ["0%", "100%", "0%"] }}
             transition={{

@@ -29,6 +29,10 @@ export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
   const pathname = nextUrl.pathname;
 
+   if (pathname.startsWith("/api/sensors")) {
+    return NextResponse.next();
+  }
+
   const secret = process.env.NEXTAUTH_SECRET;
   if (!secret) throw new Error("Missing NEXTAUTH_SECRET");
 

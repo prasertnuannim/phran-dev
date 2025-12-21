@@ -1,20 +1,34 @@
 import Sidebar from "./sidebar";
 import Navbar from "./navbar";
+import AdminProviders from "./providers";
+import { getServerAuthSession } from "@/server/services/auth/sessionService";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerAuthSession();
+  const profile = session?.user
+    ? {
+        name: session.user.name ?? "User",
+        email: session.user.email ?? null,
+        role: session.user.role ?? null,
+        image: session.user.image ?? null,
+      }
+    : null;
+
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <div className="flex flex-col flex-1">
-        <Navbar />
-        <main className="flex-1 overflow-y-auto bg-gray-100 p-4">
-          {children}
-        </main>
+    <AdminProviders>
+      <div className="flex h-screen">
+        <Sidebar profile={profile} />
+        <div className="flex flex-col flex-1">
+          <Navbar />
+          <main className="flex-1 overflow-y-auto bg-gray-100 p-4">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </AdminProviders>
   );
 }

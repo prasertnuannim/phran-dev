@@ -26,7 +26,7 @@ export function AuthSettingsForm({
             return;
           }
           setResult("✅ Saved! Logging out…");
-          await signOut({ callbackUrl: "/login" });
+          await signOut({ callbackUrl: "/" });
         });
       }}
       className="space-y-6"
