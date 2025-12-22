@@ -129,7 +129,7 @@ export async function middleware(req: NextRequest) {
   // ถ้าไม่มี token → redirect ไปหน้า login (หรือของคุณ)
   if (!token) {
     const url = nextUrl.clone();
-    url.pathname = "/auth/signin"; // ปรับเป็นเส้นทาง login ของคุณ
+    url.pathname = "/"; // ปรับเป็นเส้นทาง login ของคุณ
     // ✅ กัน loop (ถ้าเผลอให้ /auth/signin อยู่ใน protected)
     if (url.pathname === pathname) return NextResponse.next();
     return NextResponse.redirect(url);
