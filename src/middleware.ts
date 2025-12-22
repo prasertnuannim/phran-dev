@@ -29,7 +29,7 @@ export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
   const pathname = nextUrl.pathname;
 
-   if (pathname.startsWith("/api/sensors")) {
+   if (pathname.startsWith("/api/sensors/")) {
     return NextResponse.next();
   }
 
