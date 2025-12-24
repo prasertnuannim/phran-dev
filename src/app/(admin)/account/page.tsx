@@ -10,10 +10,10 @@ export default async function AccountPage() {
   if (session.user.role !== "admin") redirect("/");
 
   return (
-    <main className="mx-auto py-12">
+    <main className="mx-auto">
       <div className="mb-1">
         <h1 className="text-3xl font-semibold">Account Management</h1>
-        <p className="text-muted-foreground mt-2">
+        <p className="text-muted-foreground mt-1">
           Manage users, roles, and access from a single dashboard.
         </p>
       </div>

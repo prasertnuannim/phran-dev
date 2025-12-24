@@ -31,6 +31,8 @@ export const SocialSignInButton = ({
       type="button"
       onClick={handleClick}
       disabled={loading}
+      aria-busy={loading}
+      aria-live="polite"
       className={`
         w-full bg-white/20 hover:bg-white/40 
         text-black transition cursor-pointer
@@ -38,8 +40,24 @@ export const SocialSignInButton = ({
       `}
       variant="outline"
     >
-      {icon}
-      {loading ? "Loading..." : label}
+      {loading ? (
+        <>
+          {icon}
+          <span className="text-sm font-medium flex items-center gap-0.2">
+            Loading
+            <span className="loading-dots">
+              <span>.</span>
+              <span>.</span>
+              <span>.</span>
+            </span>
+          </span>
+        </>
+      ) : (
+        <>
+          {icon}
+          {label}
+        </>
+      )}
     </Button>
   );
 };

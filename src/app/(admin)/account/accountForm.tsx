@@ -3,7 +3,6 @@
 import { useActionState, useCallback, useEffect, useState } from "react";
 import { getUsersAction, updateUserAction, deleteUserAction, createUserAction as baseCreateUserAction } from "./actions";
 import { FullUser } from "@/types/account.type";
-import { CreateUserModal } from "@/components/form/createUserModal";
 import { DataTable, Column } from "@/components/form/dataTable";
 
 const roleToText = (role: FullUser["role"] | string | undefined) =>
@@ -104,7 +103,7 @@ export default function AccountForm() {
   ];
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-5">
       <DataTable<FullUser, UserColumnKey>
         data={users}
         columns={columns}
@@ -126,7 +125,6 @@ export default function AccountForm() {
         })}
       />
 
-      <CreateUserModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} formAction={formAction} />
     </div>
   );
 }

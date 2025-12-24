@@ -28,9 +28,6 @@ export default function DashboardPage() {
 
   const [isTransitionPending, startTransition] = useTransition();
 
-  /** ---------------------------------------------
-   *  Initial Load → ทำงานครั้งเดียว ไม่ใช้ state.range
-   * ---------------------------------------------- */
   useEffect(() => {
     startTransition(() => loadData("day"));
   }, [loadData, startTransition]); // ไม่มี state.range!
@@ -51,7 +48,7 @@ export default function DashboardPage() {
     : true;
 
   const isHumidityNormal = latest
-    ? latest.humidity >= 45 && latest.humidity <= 60
+    ? latest.humidity >= 45 && latest.humidity <= 63
     : true;
 
   const temperatureValue = latest
@@ -64,24 +61,11 @@ export default function DashboardPage() {
 
   return (
     <div
-      className="
-        relative overflow-hidden
-        min-h-screen px-6 pt-5
-        bg-gradient-to-t from-sky-200 to-gray-200 shadow-lg
-        backdrop-blur-2xl
-        text-white/90
-        font-[450] rounded-lg
-      "
-    >
+      className="relative overflow-hidden min-h-auto px-6 pt-5 bg-gradient-to-t from-sky-200 to-gray-200 shadow-lg backdrop-blur-2xl text-white/90 font-[450] rounded-lg pb-10">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 shadow-md"
       ></div>
-
-      <h1 className="text-3xl font-semibold tracking-tight mb-8 text-gray-500">
-        Smart Home Monitor
-      </h1>
-
       <div className="flex items-center gap-4">
         <FilterTabs value={state.range} onChange={handleRangeChange} />
 

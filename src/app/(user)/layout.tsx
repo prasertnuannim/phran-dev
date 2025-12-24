@@ -1,6 +1,5 @@
 
 export const dynamic = "force-dynamic";
-
 import Navbar from "./navbar";
 
 export default async function DashboardLayout({
@@ -18,7 +17,7 @@ export default async function DashboardLayout({
         <Navbar />
 
         {/* Main Content */}
-        <main className="flex-1 p-6 bg-gray-100">{children}</main>
+        <main className="p-8">{children}</main>
       </div>
     </div>
   );

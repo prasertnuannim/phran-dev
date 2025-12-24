@@ -1,7 +1,8 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { registerUser } from "./action";
 import { AuthFormState } from "@/types/auth.type";
 import FormInput from "@/components/form/formInput";
@@ -10,6 +11,8 @@ import FormAlert from "@/components/form/formAlert";
 
 export default function RegisterForm() {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
   const initialState: AuthFormState = {
     errors: {},
@@ -17,71 +20,86 @@ export default function RegisterForm() {
   };
 
   const [state, formAction, isPending] = useActionState(registerUser, initialState);
-
   const values = state.values ?? {};
 
-  useEffect(() => {
-    const form = document.querySelector("form") as HTMLFormElement | null;
+  const handleOpenChange = useCallback(
+    (open: boolean) => {
+      setIsModalOpen(open);
+      if (!open) router.push("/");
+    },
+    [router]
+  );
 
+  useEffect(() => {
     if (state.success) {
-      if (form) form.reset();
-      setTimeout(() => router.push("/"), 1500);
+      if (formRef.current) formRef.current.reset();
+      const timer = setTimeout(() => handleOpenChange(false), 1200);
+      return () => clearTimeout(timer);
     }
-  }, [state, router]);
+  }, [state.success, handleOpenChange]);
 
   return (
-    <form action={formAction} className="space-y-4">
-      <FormInput
-        name="name"
-        type="text"
-        label="Username"
-        placeholder="Enter your username"
-        defaultValue={values.name ?? ""}
-        error={state.errors?.name}
-      />
+    <Dialog open={isModalOpen} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader className="space-y-1">
+          <DialogTitle>Create your account</DialogTitle>
+          <DialogDescription>Fill in your details to get started.</DialogDescription>
+        </DialogHeader>
 
-      <FormInput
-        name="email"
-        type="email"
-        label="Email"
-        placeholder="Enter your email"
-        defaultValue={values.email ?? ""}
-        error={state.errors?.email}
-      />
+        <form ref={formRef} action={formAction} className="space-y-4">
+          <FormInput
+            name="name"
+            type="text"
+            label="Username"
+            placeholder="Enter your username"
+            defaultValue={values.name ?? ""}
+            error={state.errors?.name}
+          />
 
-      <FormInput
-        name="password"
-        type="password"
-        label="Password"
-        placeholder="Enter your password"
-        defaultValue={values.password ?? ""}
-        error={state.errors?.password}
-      />
+          <FormInput
+            name="email"
+            type="email"
+            label="Email"
+            placeholder="Enter your email"
+            defaultValue={values.email ?? ""}
+            error={state.errors?.email}
+          />
 
-      <FormInput
-        name="confirmPassword"
-        type="password"
-        label="Confirm Password"
-        placeholder="Confirm your password"
-        defaultValue={values.confirmPassword ?? ""}
-        error={state.errors?.confirmPassword}
-      />
+          <FormInput
+            name="password"
+            type="password"
+            label="Password"
+            placeholder="Enter your password"
+            defaultValue={values.password ?? ""}
+            error={state.errors?.password}
+          />
 
-      <SubmitButton text="Register" isPending={isPending} />
+          <FormInput
+            name="confirmPassword"
+            type="password"
+            label="Confirm Password"
+            placeholder="Confirm your password"
+            defaultValue={values.confirmPassword ?? ""}
+            error={state.errors?.confirmPassword}
+          />
 
-      {state.errors?.general && (
-        <FormAlert message={state.errors.general} variant="error" />
-      )}
-      {state.success && (
-        <FormAlert message="Registration successful!" variant="success" />
-      )}
+          <SubmitButton text="Register" isPending={isPending} />
 
-      <p className="text-center text-gray-600">
-        Already have an account?{" "}
-        <a href="/login" className="text-gray-800 hover:underline">
-          Login
-        </a>
-      </p>
-    </form>
+          {state.errors?.general && (
+            <FormAlert message={state.errors.general} variant="error" />
+          )}
+          {state.success && (
+            <FormAlert message="Registration successful!" variant="success" />
+          )}
+
+          <p className="text-center text-sm text-gray-600">
+            Already have an account?{" "}
+            <a href="/login" className="text-gray-800 hover:underline">
+              Login
+            </a>
+          </p>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
