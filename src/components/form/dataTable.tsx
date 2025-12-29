@@ -26,7 +26,11 @@ export type Column<T, K extends keyof T & string> = {
   searchable?: boolean;
   className?: string;
   render?: (row: T) => ReactNode;
-  editor?: (args: { row: T; value: T[K] | undefined; set: (v: T[K]) => void }) => ReactNode;
+  editor?: (args: {
+    row: T;
+    value: T[K] | undefined;
+    set: (v: T[K]) => void;
+  }) => ReactNode;
 };
 
 export type RenderActionsArgs<T extends { id: string }> = {
@@ -38,7 +42,10 @@ export type RenderActionsArgs<T extends { id: string }> = {
   hardDelete?: (id: string) => void;
 };
 
-export type DataTableProps<T extends { id: string }, K extends keyof T & string> = {
+export type DataTableProps<
+  T extends { id: string },
+  K extends keyof T & string
+> = {
   data: T[];
   columns: Column<T, K>[];
 
@@ -50,7 +57,7 @@ export type DataTableProps<T extends { id: string }, K extends keyof T & string>
   initialPageSize?: number;
   initialSort?: SortState<K>;
   searchPlaceholder?: string;
-  
+
   /** 👇 Skeleton Loading options */
   isLoading?: boolean;
   loadingRows?: number;
@@ -74,7 +81,8 @@ const toDisplayPrimitive = (raw: unknown): string => {
   if (raw == null) return "";
   if (typeof raw === "object") {
     const name = (raw as Record<string, unknown>)?.name;
-    if (["string", "number", "boolean"].includes(typeof name)) return String(name);
+    if (["string", "number", "boolean"].includes(typeof name))
+      return String(name);
     try {
       return JSON.stringify(raw);
     } catch {
@@ -84,7 +92,10 @@ const toDisplayPrimitive = (raw: unknown): string => {
   return String(raw);
 };
 
-export function DataTable<T extends { id: string }, K extends keyof T & string>({
+export function DataTable<
+  T extends { id: string },
+  K extends keyof T & string
+>({
   data,
   columns,
   onCreateClick,
@@ -106,7 +117,6 @@ export function DataTable<T extends { id: string }, K extends keyof T & string>(
   confirmDeleteClassName = "bg-red-600 text-white hover:bg-red-700",
   getConfirmDeleteProps,
 }: DataTableProps<T, K>) {
-
   // --- State ---
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortState<K>>(initialSort);
@@ -141,9 +151,19 @@ export function DataTable<T extends { id: string }, K extends keyof T & string>(
     const { key, dir } = sort;
     const mult = dir === "asc" ? 1 : -1;
     return [...filtered].sort((a, b) => {
-      const av = toDisplayPrimitive(a[key]);
-      const bv = toDisplayPrimitive(b[key]);
-      return av.localeCompare(bv, undefined, { sensitivity: "base" }) * mult;
+      const av = a[key];
+      const bv = b[key];
+
+      if (typeof av === "number" && typeof bv === "number") {
+        return (av - bv) * mult;
+      }
+      return (
+        toDisplayPrimitive(av).localeCompare(
+          toDisplayPrimitive(bv),
+          undefined,
+          { sensitivity: "base" }
+        ) * mult
+      );
     });
   }, [filtered, sort]);
 
@@ -154,11 +174,10 @@ export function DataTable<T extends { id: string }, K extends keyof T & string>(
   const startIdx = (safePage - 1) * pageSize;
   const endIdx = Math.min(startIdx + pageSize, total);
 
-  const pageRows = useMemo(() => sorted.slice(startIdx, endIdx), [
-    sorted,
-    startIdx,
-    endIdx,
-  ]);
+  const pageRows = useMemo(
+    () => sorted.slice(startIdx, endIdx),
+    [sorted, startIdx, endIdx]
+  );
 
   // --- Sort toggle ---
   const toggleSort = (key: K, enabled?: boolean) => {
@@ -174,16 +193,22 @@ export function DataTable<T extends { id: string }, K extends keyof T & string>(
   // --- Inline Edit ---
   const startEdit = (row: T) => {
     setEditingRowId(row.id);
-    setDraft(row);
+    const initialDraft = columns.reduce((acc, col) => {
+      acc[col.key] = row[col.key];
+      return acc;
+    }, {} as Partial<T>);
+    setDraft(initialDraft);
   };
+
   const cancelEdit = () => {
     setEditingRowId(null);
     setDraft({});
   };
   const saveEdit = async (id: string) => {
-    if (onUpdate) {
+    if (onUpdate && Object.keys(draft).length > 0) {
       await onUpdate(id, draft as Partial<T>);
     }
+
     cancelEdit();
   };
   const hardDelete = async (id: string) => {
@@ -227,9 +252,7 @@ export function DataTable<T extends { id: string }, K extends keyof T & string>(
     return (
       <input
         value={String(v ?? "")}
-        onChange={(e) =>
-          setDraftField(key, e.target.value as T[typeof key])
-        }
+        onChange={(e) => setDraftField(key, e.target.value as T[typeof key])}
         className="border px-2 py-1 rounded w-full text-sm"
       />
     );
@@ -266,8 +289,7 @@ export function DataTable<T extends { id: string }, K extends keyof T & string>(
     const title = dyn.title ?? confirmDeleteTitle;
     const description = dyn.description ?? confirmDeleteDescription;
     const confirmText = dyn.confirmText ?? confirmDeleteText;
-    const confirmClassName =
-      dyn.confirmClassName ?? confirmDeleteClassName;
+    const confirmClassName = dyn.confirmClassName ?? confirmDeleteClassName;
 
     return (
       <div className="flex gap-2 justify-center">
@@ -301,7 +323,6 @@ export function DataTable<T extends { id: string }, K extends keyof T & string>(
 
   return (
     <div className="rounded-md border min-h-[250px] flex flex-col">
-      
       {/* Header */}
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between px-4 py-3">
         <input
@@ -326,103 +347,111 @@ export function DataTable<T extends { id: string }, K extends keyof T & string>(
       </div>
 
       {/* Table */}
-      <table className="w-full border-collapse">
-        <thead className="bg-gray-100">
-          <tr>
-            {columns.map((col) => (
-              <th
-                key={String(col.key)}
-                className="border px-4 py-2 text-left"
-              >
-                <button
-                  onClick={() => toggleSort(col.key, col.sortable)}
-                  className={`inline-flex items-center gap-1 ${
-                    col.sortable ? "hover:underline" : "cursor-default"
-                  }`}
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-gray-100">
+            <tr>
+              {columns.map((col) => (
+                <th
+                  key={String(col.key)}
+                  className="border px-4 py-2 text-left"
                 >
-                  {col.header} {col.sortable && <SortIcon col={col.key} />}
-                </button>
-              </th>
-            ))}
-            <th className="border px-4 py-2 text-center">Actions</th>
-          </tr>
-        </thead>
+                  <button
+                    onClick={() => toggleSort(col.key, col.sortable)}
+                    className={`inline-flex items-center gap-1 ${
+                      col.sortable ? "hover:underline" : "cursor-default"
+                    }`}
+                  >
+                    {col.header} {col.sortable && <SortIcon col={col.key} />}
+                  </button>
+                </th>
+              ))}
+              <th className="border px-4 py-2 text-center">Actions</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {/* 🟦 Skeleton rows */}
-          {isLoading ? (
-            Array.from({ length: loadingRows }).map((_, i) => (
-              <tr key={`sk-${i}`} className="animate-pulse">
-                {columns.map((col) => (
-                  <td className="border px-4 py-2" key={col.key}>
-                    <div className="h-4 bg-gray-200 rounded w-3/4" />
-                  </td>
-                ))}
-                <td className="border px-4 py-2 text-center">
-                  <div className="flex gap-2 justify-center">
-                    <div className="h-4 w-4 bg-gray-200 rounded" />
-                    <div className="h-4 w-4 bg-gray-200 rounded" />
-                  </div>
-                </td>
-              </tr>
-            ))
-          ) : pageRows.length ? (
-            pageRows.map((row) => {
-              const isEditing = editingRowId === row.id;
-              return (
-                <tr key={row.id} className="hover:bg-gray-50">
-                  {columns.map((col) => {
-                    const value = isEditing
-                      ? (draft as T)[col.key]
-                      : row[col.key];
-
-                    return (
-                      <td
-                        key={`${row.id}-${String(col.key)}`}
-                        className={`border px-4 py-2 ${col.className ?? ""}`}
-                      >
-                        {isEditing
-                          ? col.editor
-                            ? col.editor({
-                                row,
-                                value,
-                                set: (v: T[K]) =>
-                                  setDraftField(col.key, v),
-                              })
-                            : defaultEditor(col.key)
-                          : col.render
-                          ? col.render(row)
-                          : toDisplayPrimitive(value)}
-                      </td>
-                    );
-                  })}
-
+          <tbody>
+            {/* 🟦 Skeleton rows */}
+            {isLoading ? (
+              Array.from({ length: loadingRows }).map((_, i) => (
+                <tr key={`sk-${i}`}>
+                  {columns.map((col) => (
+                    <td key={col.key} className="border px-4 py-2">
+                      <SkeletonCell
+                        width={
+                          col.key === "name"
+                            ? "w-2/3"
+                            : col.key === "email"
+                            ? "w-full"
+                            : "w-1/2"
+                        }
+                      />
+                    </td>
+                  ))}
                   <td className="border px-4 py-2 text-center">
-                    {(renderActions ?? defaultRenderActions)({
-                      row,
-                      isEditing,
-                      startEdit,
-                      cancelEdit,
-                      saveEdit,
-                      hardDelete,
-                    })}
+                    <div className="flex justify-center gap-2">
+                      <SkeletonCell width="w-4" />
+                      <SkeletonCell width="w-4" />
+                    </div>
                   </td>
                 </tr>
-              );
-            })
-          ) : (
-            <tr>
-              <td
-                colSpan={columns.length + 1}
-                className="text-center py-4 text-gray-500"
-              >
-                No results.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+              ))
+            ) : pageRows.length ? (
+              pageRows.map((row) => {
+                const isEditing = editingRowId === row.id;
+                return (
+                  <tr key={row.id} className="hover:bg-gray-50">
+                    {columns.map((col) => {
+                      const value = isEditing
+                        ? (draft as T)[col.key]
+                        : row[col.key];
 
+                      return (
+                        <td
+                          key={`${row.id}-${String(col.key)}`}
+                          className={`border px-4 py-2 ${col.className ?? ""}`}
+                        >
+                          {isEditing
+                            ? col.editor
+                              ? col.editor({
+                                  row,
+                                  value,
+                                  set: (v: T[K]) => setDraftField(col.key, v),
+                                })
+                              : defaultEditor(col.key)
+                            : col.render
+                            ? col.render(row)
+                            : toDisplayPrimitive(value)}
+                        </td>
+                      );
+                    })}
+
+                    <td className="border px-4 py-2 text-center">
+                      {(renderActions ?? defaultRenderActions)({
+                        row,
+                        isEditing,
+                        startEdit,
+                        cancelEdit,
+                        saveEdit,
+                        hardDelete,
+                      })}
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td
+                  colSpan={columns.length + 1}
+                  className="text-center py-4 text-gray-500"
+                >
+                  No results.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       {/* Footer */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-4 py-3 border-t mt-auto">
         <div className="flex items-center gap-3">
@@ -483,5 +512,19 @@ export function DataTable<T extends { id: string }, K extends keyof T & string>(
         </div>
       </div>
     </div>
+  );
+}
+
+function SkeletonCell({ width = "w-3/4" }: { width?: string }) {
+  return (
+    <div
+      className={`
+        h-4 ${width} rounded
+        bg-gradient-to-r
+        from-gray-200 via-gray-300 to-gray-200
+        bg-[length:400px_100%]
+        animate-[shimmer_3s_ease-in-out_infinite]
+      `}
+    />
   );
 }

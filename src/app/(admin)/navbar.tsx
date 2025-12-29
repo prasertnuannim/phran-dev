@@ -12,7 +12,7 @@ export default function Navbar() {
   return (
     <div
       className={clsx(
-        "h-18 w-full flex items-center justify-between px-6 bg-gray-300 shadow-md sticky top-0 z-40 rounded-xl "
+        "h-18 w-full flex items-center justify-between px-6 bg-gray-800 shadow-md sticky top-0 z-40 rounded-xl "
       )}
     >
       <div className="flex items-center gap-3">

@@ -1,66 +1,112 @@
-import FormInput from "@/components/form/formInput";
-import { SubmitButton } from "@/components/form/submitButton";
-import FormAlert from "@/components/form/formAlert";
+"use client";
+
+import { useActionState, useEffect, useRef } from "react";
 import { registerUser } from "@/app/actions/registerForm";
+import { AuthFormState } from "@/types/auth.type";
+import FormInput from "@/components/form/formInput";
+import FormAlert from "@/components/form/formAlert";
+import { SubmitButton } from "@/components/form/submitButton";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
-export default function RegisterForm({
-  searchParams,
-}: {
-  searchParams?: {
-    error?: string;
-    success?: string;
-    name?: string;
-    email?: string;
-  };
-}) {
+type RegisterModalProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+const initialState: AuthFormState = {
+  errors: {},
+  values: { name: "", email: "", password: "", confirmPassword: "" },
+};
+
+export default function RegisterModal({
+  open,
+  onOpenChange,
+}: RegisterModalProps) {
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const [state, formAction, isPending] = useActionState(
+    registerUser,
+    initialState
+  );
+
+  const values = state.values ?? {};
+
+  useEffect(() => {
+    if (!state.success) return;
+
+    formRef.current?.reset();
+
+    const timer = setTimeout(() => {
+      onOpenChange(false);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [state.success, onOpenChange]);
+
   return (
-    <form action={registerUser} className="space-y-4">
-      <FormInput
-        name="name"
-        label="Username"
-        placeholder="Enter your username"
-        defaultValue={searchParams?.name}
-      />
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Create account</DialogTitle>
+          <DialogDescription>
+            Sign up to get started
+          </DialogDescription>
+        </DialogHeader>
 
-      <FormInput
-        name="email"
-        type="email"
-        label="Email"
-        placeholder="Enter your email"
-        defaultValue={searchParams?.email}
-      />
+        <form ref={formRef} action={formAction} className="space-y-4">
+          <FormInput
+            name="name"
+            type="text"
+            label="Username"
+            defaultValue={values.name ?? ""}
+            error={state.errors?.name}
+          />
 
-      <FormInput
-        name="password"
-        type="password"
-        label="Password"
-        placeholder="Enter your password"
-      />
+          <FormInput
+            name="email"
+            type="email"
+            label="Email"
+            defaultValue={values.email ?? ""}
+            error={state.errors?.email}
+          />
 
-      <FormInput
-        name="confirmPassword"
-        type="password"
-        label="Confirm Password"
-        placeholder="Confirm your password"
-      />
+          <FormInput
+            name="password"
+            type="password"
+            label="Password"
+            error={state.errors?.password}
+          />
 
-      <SubmitButton text="Register" />
+          <FormInput
+            name="confirmPassword"
+            type="password"
+            label="Confirm Password"
+            error={state.errors?.confirmPassword}
+          />
 
-      {searchParams?.error && (
-        <FormAlert variant="error" message={searchParams.error} />
-      )}
+          <SubmitButton text="Register" isPending={isPending} />
 
-      {searchParams?.success && (
-        <FormAlert variant="success" message="Registration successful!" />
-      )}
+          {state.errors?.general && (
+            <FormAlert
+              variant="error"
+              message={state.errors.general}
+            />
+          )}
 
-      <p className="text-center text-sm text-gray-600">
-        Already have an account?{" "}
-        <a href="/login" className="hover:underline">
-          Login
-        </a>
-      </p>
-    </form>
+          {state.success && (
+            <FormAlert
+              variant="success"
+              message="Registration successful!"
+            />
+          )}
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

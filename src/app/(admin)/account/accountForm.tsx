@@ -11,7 +11,6 @@ type UserColumnKey = "name" | "email" | "role";
 
 export default function AccountForm() {
   const [users, setUsers] = useState<FullUser[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUsersLoading, setIsUsersLoading] = useState(true);
 
   const fetchUsers = useCallback(async (): Promise<FullUser[]> => {
@@ -27,7 +26,6 @@ export default function AccountForm() {
     try {
       const data = await fetchUsers();
       setUsers(data);
-      setIsModalOpen(false);
     } finally {
       setIsUsersLoading(false);
     }
@@ -41,7 +39,7 @@ export default function AccountForm() {
     }
     return state;
   };
-  const [state, formAction, isCreatePending] = useActionState<FullUser[], FormData>(createUserAction, users);
+  const [state, , isCreatePending] = useActionState<FullUser[], FormData>(createUserAction, users);
 
   useEffect(() => {
     syncUsers();
@@ -50,7 +48,6 @@ export default function AccountForm() {
   useEffect(() => {
     if (state && state.length >= users.length) {
       setUsers(state);
-      setIsModalOpen(false);
     }
   }, [state]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -72,8 +69,8 @@ export default function AccountForm() {
   };
 
   const columns: Column<FullUser, UserColumnKey>[] = [
-    { key: "name", header: "Name", sortable: true },
-    { key: "email", header: "Email", sortable: true },
+    { key: "name", header: "Name", sortable: true,className: "break-all max-w-[260px]" },
+    { key: "email", header: "Email", sortable: true,  className: "break-all max-w-[260px]" },
     {
       key: "role",
       header: "Role",
@@ -111,7 +108,6 @@ export default function AccountForm() {
         initialSort={{ key: "name", dir: "asc" }}
         searchPlaceholder="Search name / email / role…"
         isLoading={isUsersLoading || isCreatePending}
-        onCreateClick={() => setIsModalOpen(true)}
         onUpdate={handleUpdateUser}
         onHardDelete={handleHardDeleteUser}
         confirmDeleteTitle="Delete this user permanently?"

@@ -175,3 +175,16 @@ html, body {
     opacity: 1;
   }
 }
+
+html {
+  scrollbar-gutter: stable;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}

@@ -7,7 +7,7 @@ import FormInput from "@/components/form/formInput";
 import { LoginFormState } from "@/types/auth.type";
 import FormAlert from "@/components/form/formAlert";
 import { loginUser } from "@/app/actions/loginForm";
-// import RegisterForm from "@/components/form/registerForm";
+import RegisterModal from "./RegisterForm";
 
 export default function LoginForm() {
   const initialState: LoginFormState = {
@@ -16,7 +16,8 @@ export default function LoginForm() {
   };
 
   const [state, formAction, isPending] = useActionState(loginUser, initialState);
-  const [showRegister, setShowRegister] = useState(false);
+  const [openRegister, setOpenRegister] = useState(false);
+
 
   if (state.success) {
     redirect("/");
@@ -51,18 +52,21 @@ export default function LoginForm() {
           />
         )}
 
-        <div className="flex justify-end text-xs text-gray-600 dark:text-gray-400">
+        {/* <div className="flex justify-end text-xs text-gray-600 dark:text-gray-400">
           <button
             type="button"
-            onClick={() => setShowRegister(true)}
+             onClick={() => setOpenRegister(true)}
             className="hover:text-gray-400 text-white/20 transition"
           >
             Register here
           </button>
-        </div>
+        </div> */}
       </form>
 
-      {/* {showRegister && <RegisterForm onClose={() => setShowRegister(false)} />} */}
+      <RegisterModal
+        open={openRegister}
+        onOpenChange={setOpenRegister}
+      />
     </>
   );
 }

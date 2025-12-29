@@ -1,17 +1,7 @@
-
-
 "use client";
 
-import { useState, type ReactNode } from "react";
-import {
-    Layers,
-    CheckCircle,
-    Clock,
-    ChevronDown,
-    Power,
-    Settings,
-    User,
-} from "lucide-react";
+import { useState, type ReactNode, useRef, useEffect } from "react";
+import { Layers, ChevronDown, Power, Settings, User } from "lucide-react";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -20,296 +10,317 @@ import { useSidebar } from "@/context/sidebar-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 
+/* ---------------- TYPES ---------------- */
+
 type SidebarProfile = {
-    name: string;
-    email: string | null;
-    role: string | null;
-    image: string | null;
+  name: string;
+  email: string | null;
+  role: string | null;
+  image: string | null;
 };
+
+/* ---------------- MAIN ---------------- */
 
 export default function Sidebar({ profile }: { profile: SidebarProfile | null }) {
-    const { open } = useSidebar();
-    const pathname = usePathname() ?? ""; // ⭐ ตรวจเส้นทางปัจจุบัน
-    const [statisticsSubmenuOverride, setStatisticsSubmenuOverride] = useState<
-        boolean | null
-    >(null);
-    const avatarSrc =
-        profile?.image && profile.image.trim().length > 0
-            ? profile.image
-            : "/avatar1.png";
+  const { open } = useSidebar();
+  const pathname = usePathname() ?? "";
+  const [submenuOpen, setSubmenuOpen] = useState(false);
+  const popoverRef = useRef<HTMLDivElement | null>(null);
 
-    // ตรวจว่า submenu ควร active ไหม
-    const isStatisticsActive =
-        pathname.startsWith("/statistics") ||
-        pathname === "/statistics";
 
-    const statisticsSubmenuOpen =
-        open &&
-        (isStatisticsActive
-            ? statisticsSubmenuOverride ?? true
-            : statisticsSubmenuOverride === true);
+  const isStatisticsActive =
+    pathname === "/statistics" || pathname.startsWith("/statistics");
 
-    const toggleStatisticsSubmenu = () => {
-        setStatisticsSubmenuOverride((prev) => {
-            const currentlyOpen =
-                open &&
-                (isStatisticsActive ? (prev ?? true) : prev === true);
-            return currentlyOpen ? false : true;
-        });
-    };
+  const avatarSrc =
+    profile?.image && profile.image.trim().length > 0
+      ? profile.image
+      : "/avatar1.png";
 
-    return (
-        <div
-            className={clsx(
-                "bg-gray-300 h-screen flex flex-col transition-all duration-500 rounded-2xl p-5 shadow-xl",
-                open ? "w-74" : "w-20"
-            )}
+  /* ----- Close popover on outside click ----- */
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target as Node)
+      ) {
+        setSubmenuOpen(false);
+      }
+    }
+
+    if (!open && submenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [submenuOpen, open]);
+
+  return (
+    <aside
+      className={clsx(
+        "h-dvh sticky top-0 z-40 flex flex-col rounded-xl px-3",
+        "bg-gray-800 text-white shadow-lg transition-all duration-500",
+        open ? "w-64" : "w-20"
+      )}
+    >
+      {/* PROFILE */}
+      <div
+        className={clsx(
+          "flex flex-col items-center",
+          open ? "mt-5 mb-6" : "mt-5 mb-5"
+        )}
+      >
+        <Avatar
+          className={clsx(
+            "border border-white/20 bg-white",
+            open ? "h-[70px] w-[70px]" : "h-[48px] w-[48px]"
+          )}
         >
-            <div className={clsx("flex flex-col items-center transition-all", open ? "mt-5 mb-6" : "mt-5 mb-5")}>
-                <Avatar
-                    className={clsx(
-                        "border border-white bg-white",
-                        open ? "h-[70px] w-[70px]" : "h-[50px] w-[50px]"
-                    )}
-                >
-                    <AvatarImage
-                        src={avatarSrc}
-                        alt={profile?.name ?? "User"}
-                        referrerPolicy="no-referrer"
-                    />
-                    <AvatarFallback className="text-gray-800">
-                        {(profile?.name?.charAt(0)?.toUpperCase() ?? "?")}
-                    </AvatarFallback>
-                </Avatar>
+          <AvatarImage src={avatarSrc} />
+          <AvatarFallback>
+            {profile?.name?.charAt(0)?.toUpperCase() ?? "?"}
+          </AvatarFallback>
+        </Avatar>
 
-                {open && (
-                    <>
-                        <h2 className="text-white font-semibold mt-3">
-                            {profile?.name ?? "Guest"}
-                        </h2>
-                        <span className="text-white/70 text-sm">
-                            {profile?.role ?? profile?.email ?? "Not signed in"}
-                        </span>
-                        <div className="flex items-center gap-1 mt-2">
-                            <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
-                            <span className="text-xs text-white/60">Online</span>
-                        </div>
-                    </>
+        {open && (
+          <>
+            <h2 className="font-semibold mt-3">
+              {profile?.name ?? "Guest"}
+            </h2>
+            <span className="text-xs text-white/70">
+              {profile?.role ?? profile?.email}
+            </span>
+          </>
+        )}
+      </div>
+
+      {/* MENU */}
+      {open ? (
+        <div className="flex flex-col space-y-1">
+          <MenuItem
+            href="/account"
+            icon={<User size={20} />}
+            label="Accounts"
+            active={pathname.startsWith("/account")}
+          />
+
+          <MenuItem
+            href="/auth-settings"
+            icon={<Settings size={20} />}
+            label="Settings"
+            active={pathname.startsWith("/auth-settings")}
+          />
+
+          {/* EXPANDED STATISTICS */}
+          <div className="">
+            <button
+              onClick={() =>
+                setSubmenuOpen((prev) => {
+                  const next = !prev;
+                  localStorage.setItem("collapsed-statistics-open", String(next));
+                  return next;
+                })
+              }
+              className={clsx(
+                "flex items-center w-full gap-3 px-3 py-2 rounded-xl",
+                "hover:bg-white/20",
+                isStatisticsActive && "bg-white/20"
+              )}
+            >
+              <Layers size={20} />
+              <span>Statistics</span>
+              <ChevronDown
+                size={18}
+                className={clsx(
+                  "ml-auto transition-transform",
+                  submenuOpen && "rotate-180"
                 )}
-            </div>
+              />
+            </button>
 
-            {/* MENU */}
-            {open ? (
-                <>
-                    <p className="text-white/70 text-xs mt-6 mb-3 uppercase tracking-wide">Favourites</p>
-                    <div className="flex flex-col space-y-2">
-                        <MenuItem
-                            href="/account"
-                            icon={<User size={20} />}
-                            label="Accounts"
-                            active={pathname.startsWith("/account")}
-                            open={open}
-                        />
-
-                        <MenuItem
-                            href="/auth-settings"
-                            icon={<Settings size={20} />}
-                            label="Settings"
-                            active={pathname.startsWith("/auth-settings")}
-                            open={open}
-                        />
-                    </div>
-
-                    {/* STATISTICS */}
-                    <div className="mt-3">
-                        <button
-                            onClick={toggleStatisticsSubmenu}
-                            className={clsx(
-                                "flex items-center w-full gap-3 px-3 py-2 rounded-xl hover:bg-white/20 transition cursor-pointer text-white/90",
-                                isStatisticsActive && "bg-white/20 border border-white/10"
-                            )}
-                        >
-                            <Layers size={20} />
-                            <span>Statistics</span>
-
-                            <ChevronDown
-                                size={18}
-                                className={clsx(
-                                    "ml-auto transition-transform",
-                                    statisticsSubmenuOpen ? "rotate-180" : "rotate-0"
-                                )}
-                            />
-                        </button>
-
-                        <AnimatePresence initial={false}>
-                            {statisticsSubmenuOpen && (
-                                <motion.div
-                                    key="submenu"
-                                    initial={{ opacity: 0, height: 0, y: -10 }}
-                                    animate={{ opacity: 1, height: "auto", y: 0 }}
-                                    exit={{ opacity: 0, height: 0, y: -10 }}
-                                    transition={{ duration: 0.25, ease: "easeOut" }}
-                                    className="pl-10 flex flex-col mt-1 space-y-1"
-                                >
-                                    <SubMenuItem
-                                        href="/statistics/daily"
-                                        label="Daily Report"
-                                        active={pathname === "/statistics/daily"}
-                                    />
-                                    <SubMenuItem
-                                        href="/statistics/monthly"
-                                        label="Monthly KPI"
-                                        active={pathname === "/statistics/monthly"}
-                                    />
-                                    <SubMenuItem
-                                        href="/statistics/yearly"
-                                        label="Yearly Summary"
-                                        active={pathname === "/statistics/yearly"}
-                                    />
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-
-                    {/* OTHER */}
-                    <div className="flex flex-col space-y-2 mt-1">
-                        <MenuItem
-                            href="/approvals"
-                            icon={<CheckCircle size={20} />}
-                            label="Approvals"
-                            active={pathname.startsWith("/approvals")}
-                            open={open}
-                        />
-                        <MenuItem
-                            href="/timesheets"
-                            icon={<Clock size={20} />}
-                            label="Timesheets"
-                            active={pathname.startsWith("/timesheets")}
-                            open={open}
-                        />
-                    </div>
-                </>
-            ) : (
-                // COLLAPSED MODE
-                <>
-                    <div className="flex flex-col items-center space-y-6 mt-4">
-
-                        <IconBtn
-                            href="/account"
-                            icon={<User size={22} />}
-                            active={pathname.startsWith("/account")}
-                        />
-
-                        <IconBtn
-                            href="/auth-settings"
-                            icon={<Settings size={22} />}
-                            active={pathname.startsWith("/auth-settings")}
-                        />
-
-                        <IconBtn
-                            icon={<Layers size={22} />}
-                            active={isStatisticsActive}
-                            onClick={toggleStatisticsSubmenu}
-                        />
-
-                        <IconBtn
-                            href="/approvals"
-                            icon={<CheckCircle size={22} />}
-                            active={pathname.startsWith("/approvals")}
-                        />
-
-                        <IconBtn
-                            href="/timesheets"
-                            icon={<Clock size={22} />}
-                            active={pathname.startsWith("/timesheets")}
-                        />
-                    </div>
-                </>
-            )}
-
-            {/* SIGN OUT */}
-            <div className="mt-auto">
-                <LogoutButton
-                    callbackUrl="/"
-                    icon={<Power size={20} className="text-white" />}
-                    showText={open}
-                    text="Sign Out"
-                    variant="ghost"
-                    className={clsx(
-                        "w-full border-0 px-2 py-2 rounded-xl transition",
-                        open ? "justify-start" : "justify-center"
-                    )}
-                />
-            </div>
+            <AnimatePresence>
+              {submenuOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="pl-10 mt-1 space-y-1 overflow-hidden"
+                >
+                  <SubMenu />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-    );
+      ) : (
+        /* ---------- COLLAPSED MODE ---------- */
+        <div className="relative flex flex-col items-center space-y-6 mt-4">
+          <IconBtn
+            href="/account"
+            icon={<User size={22} />}
+            active={pathname.startsWith("/account")}
+          />
+
+          <IconBtn
+            href="/auth-settings"
+            icon={<Settings size={22} />}
+            active={pathname.startsWith("/auth-settings")}
+          />
+
+          {/* STATISTICS ICON */}
+          <button
+            onClick={() =>
+              setSubmenuOpen((prev) => {
+                const next = !prev;
+                localStorage.setItem("collapsed-statistics-open", String(next));
+                return next;
+              })
+            }
+            className={clsx(
+              "p-3 rounded-2xl transition",
+              submenuOpen || isStatisticsActive
+                ? "bg-white/30"
+                : "hover:bg-white/20"
+            )}
+          >
+            <Layers size={22} />
+          </button>
+
+          {/* FLOATING SUBMENU */}
+          <AnimatePresence>
+            {!open && submenuOpen && (
+              <motion.div
+                ref={popoverRef}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.2 }}
+                className="absolute left-20 top-32 bg-gray-900 rounded-xl shadow-xl p-2 w-44"
+              >
+                <SubMenu onSelect={() => setSubmenuOpen(false)} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
+
+      {/* SIGN OUT */}
+      <div className="mt-auto pb-3">
+        <LogoutButton
+          callbackUrl="/"
+          icon={<Power size={20} />}
+          showText={open}
+          text="Sign Out"
+          variant="ghost"
+          className={clsx(
+            "w-full rounded-xl",
+            open ? "justify-start" : "justify-center"
+          )}
+        />
+      </div>
+    </aside>
+  );
 }
 
-type MenuItemProps = {
-    href: string;
-    icon: ReactNode;
-    label: string;
-    active: boolean;
-    open: boolean;
-};
+/* ---------------- SUB COMPONENTS ---------------- */
 
-function MenuItem({ href, icon, label, active, open }: MenuItemProps) {
-    return (
-        <Link
-            href={href}
-            className={clsx(
-                "flex items-center gap-3 px-3 py-2 rounded-xl transition cursor-pointer",
-                "text-white/90 hover:bg-white/20",
-                active && "bg-white/30 border border-white/20 shadow-inner"
-            )}
-        >
-            {icon}
-            {open && <span>{label}</span>}
-        </Link>
-    );
+function MenuItem({
+  href,
+  icon,
+  label,
+  active,
+}: {
+  href: string;
+  icon: ReactNode;
+  label: string;
+  active: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={clsx(
+        "flex items-center gap-3 px-3 py-2 rounded-xl",
+        "hover:bg-white/20",
+        active && "bg-white/30"
+      )}
+    >
+      {icon}
+      <span>{label}</span>
+    </Link>
+  );
 }
 
-type SubMenuItemProps = {
-    label: string;
-    href: string;
-    active: boolean;
-};
+function SubMenu({ onSelect }: { onSelect?: () => void }) {
+  const pathname = usePathname();
 
-function SubMenuItem({ label, href, active }: SubMenuItemProps) {
-    return (
-        <Link
-            href={href}
-            className={clsx(
-                "py-2 text-white/80 hover:text-white transition",
-                active && "text-white font-semibold"
-            )}
-        >
-            {label}
-        </Link>
-    );
+  return (
+    <>
+      <SubMenuItem
+        href="/statistics/daily"
+        label="Daily Report"
+        active={pathname === "/statistics/daily"}
+        onClick={onSelect}
+      />
+      <SubMenuItem
+        href="/statistics/monthly"
+        label="Monthly KPI"
+        active={pathname === "/statistics/monthly"}
+        onClick={onSelect}
+      />
+      <SubMenuItem
+        href="/statistics/yearly"
+        label="Yearly Summary"
+        active={pathname === "/statistics/yearly"}
+        onClick={onSelect}
+      />
+    </>
+  );
 }
 
-type IconBtnProps = {
-    icon: ReactNode;
-    active?: boolean;
-    onClick?: () => void;
-    href?: string;
-};
+function SubMenuItem({
+  href,
+  label,
+  active,
+  onClick,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+  onClick?: () => void;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={clsx(
+        "block px-3 py-2 rounded-lg text-sm transition",
+        active
+          ? "bg-white/20 text-white font-semibold"
+          : "text-white/70 hover:bg-white/10 hover:text-white"
+      )}
+    >
+      {label}
+    </Link>
+  );
+}
 
-function IconBtn({ icon, active, onClick, href }: IconBtnProps) {
-    const Btn = (
-        <button
-            onClick={onClick}
-            className={clsx(
-                "p-3 rounded-2xl transition flex items-center justify-center text-white/80 hover:text-white",
-                active
-                    ? "bg-white/30 border border-white/20 shadow-inner"
-                    : "hover:bg-white/20"
-            )}
-        >
-            {icon}
-        </button>
-    );
-
-    return href ? <Link href={href}>{Btn}</Link> : Btn;
+function IconBtn({
+  icon,
+  active,
+  href,
+}: {
+  icon: ReactNode;
+  active?: boolean;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className={clsx(
+        "p-3 rounded-2xl transition",
+        active ? "bg-white/30" : "hover:bg-white/20"
+      )}
+    >
+      {icon}
+    </Link>
+  );
 }
