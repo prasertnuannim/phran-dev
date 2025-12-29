@@ -99,12 +99,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
 
-      <body
-        className="
-          font-sans transition-colors duration-500
-          bg-gradient-to-br from-white via-[#f8f6f1] to-[#e9e6df] text-neutral-900
-        "
-      >
+      <body className="font-sans transition-colors duration-500">
       <SessionProvider session={session}>  {children}</SessionProvider>
       </body>
     </html>

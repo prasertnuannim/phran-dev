@@ -59,10 +59,8 @@ export function ButtonLogin() {
 
               {/* EMAIL SECTION */}
               <div className="flex flex-col justify-center gap-4 p-8 md:w-1/2 bg-black/20 backdrop-blur-lg text-gray-100 border-l border-white/10">
-
                 <LoginForm />
               </div>
-
             </div>
           </DialogPanel>
         </div>
