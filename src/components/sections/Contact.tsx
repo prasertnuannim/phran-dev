@@ -171,7 +171,7 @@ export default function Contact() {
                   ? "bg-green-600"
                   : formStatus === "error"
                   ? "bg-red-600"
-                  : "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:brightness-110"
+                  : "bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 hover:brightness-110"
               } ${isPending || hasError ? "opacity-70 cursor-not-allowed" : ""}`}
           >
             {isPending && (

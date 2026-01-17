@@ -48,6 +48,7 @@ export async function middleware(req: NextRequest) {
   const matched = matchProtectedPath(pathname);
 
   const token = await readToken(req, secret);
+    console.log("[middleware][token]", token);
   const role = normalizeAccessRole(token?.role) ?? AccessRole.Guest;
 
   if (!matched) {

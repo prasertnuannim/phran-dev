@@ -7,7 +7,6 @@ type Props = PropsWithChildren<{
   className?: string;
   bg?: string;
 }>;
-
 const Section = forwardRef<HTMLElement, Props>(({ id, className, bg, children }, ref) => (
   <section
     ref={ref}
@@ -17,6 +16,5 @@ const Section = forwardRef<HTMLElement, Props>(({ id, className, bg, children },
     {children}
   </section>
 ));
-
 Section.displayName = "Section";
 export default Section;

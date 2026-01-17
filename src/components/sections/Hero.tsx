@@ -38,15 +38,10 @@ export default function Hero() {
           duration: 6,
           ease: "linear",
         }}
-        className="
-          font-[var(--font-playfair)]
-          text-5xl md:text-6xl font-bold tracking-tight mb-4
-          bg-gradient-to-r from-green-800 via-gray-300 to-green-800
-          bg-[length:200%_200%]
-          bg-clip-text text-transparent
-        "
+        className="text-5xl md:text-6xl font-bold tracking-tight mb-4 bg-linear-to-r from-green-800 via-gray-300 to-green-800
+          bg-size-[200%_200%] bg-clip-text text-transparent"
       >
-        Phran Dev
+        Phran Dev 
       </motion.h1>
 
       <motion.p
@@ -55,18 +50,16 @@ export default function Hero() {
         transition={{ delay: 0.3, duration: 1 }}
         className="
           text-xl md:text-2xl leading-relaxed mb-8 font-[var(--font-sans)]
-          bg-gradient-to-r from-gray-400 via-gray-800 to-gray-400
-          bg-[length:200%_200%]
+          bg-linear-to-r from-gray-400 via-gray-800 to-gray-400
+          bg-size-[200%_200%]
           bg-clip-text text-transparent
           animate-gradient-x
         "
       >
-        สร้างความฝัน ล่าความคิด  
+        พรานเดฟ สร้างความฝัน ล่าความคิด  
         ที่ซึ่งสัญชาตญาณของพราน มาบรรจบกับความคิดสร้างสรรค์ของนักพัฒนา
       </motion.p>
     </motion.div>
-
-
       </motion.div>
 
       {/* Right: Image */}
