@@ -102,6 +102,13 @@ exports.Prisma.SensorReadingScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PM25ReadingScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  pm25: 'pm25',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -114,7 +121,8 @@ exports.Prisma.QueryMode = {
 
 
 exports.Prisma.ModelName = {
-  SensorReading: 'SensorReading'
+  SensorReading: 'SensorReading',
+  PM25Reading: 'PM25Reading'
 };
 /**
  * Create the Client
@@ -124,10 +132,10 @@ const config = {
   "clientVersion": "7.1.0",
   "engineVersion": "ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated/client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel SensorReading {\n  id          String   @id @default(cuid())\n  deviceId    String\n  type        String\n  co2         Float\n  temperature Float\n  humidity    Float\n  createdAt   DateTime @default(now())\n}\n"
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated/client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel SensorReading {\n  id          String   @id @default(cuid())\n  deviceId    String\n  type        String\n  co2         Float\n  temperature Float\n  humidity    Float\n  createdAt   DateTime @default(now())\n}\n\nmodel PM25Reading {\n  id        String   @id @default(cuid())\n  deviceId  String\n  pm25      Float\n  createdAt DateTime @default(now())\n}\n"
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"SensorReading\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"deviceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"co2\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"temperature\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"humidity\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"SensorReading\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"deviceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"co2\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"temperature\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"humidity\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"PM25Reading\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"deviceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pm25\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.compilerWasm = {
   getRuntime: async () => require('./query_compiler_bg.js'),

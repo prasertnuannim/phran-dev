@@ -130,6 +130,13 @@ exports.Prisma.SensorReadingScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PM25ReadingScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  pm25: 'pm25',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -142,7 +149,8 @@ exports.Prisma.QueryMode = {
 
 
 exports.Prisma.ModelName = {
-  SensorReading: 'SensorReading'
+  SensorReading: 'SensorReading',
+  PM25Reading: 'PM25Reading'
 };
 
 /**

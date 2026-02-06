@@ -18,6 +18,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  * 
  */
 export type SensorReading = $Result.DefaultSelection<Prisma.$SensorReadingPayload>
+/**
+ * Model PM25Reading
+ * 
+ */
+export type PM25Reading = $Result.DefaultSelection<Prisma.$PM25ReadingPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -145,6 +150,16 @@ export class PrismaClient<
     * ```
     */
   get sensorReading(): Prisma.SensorReadingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pM25Reading`: Exposes CRUD operations for the **PM25Reading** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PM25Readings
+    * const pM25Readings = await prisma.pM25Reading.findMany()
+    * ```
+    */
+  get pM25Reading(): Prisma.PM25ReadingDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -579,7 +594,8 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    SensorReading: 'SensorReading'
+    SensorReading: 'SensorReading',
+    PM25Reading: 'PM25Reading'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -595,7 +611,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "sensorReading"
+      modelProps: "sensorReading" | "pM25Reading"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -670,6 +686,80 @@ export namespace Prisma {
           count: {
             args: Prisma.SensorReadingCountArgs<ExtArgs>
             result: $Utils.Optional<SensorReadingCountAggregateOutputType> | number
+          }
+        }
+      }
+      PM25Reading: {
+        payload: Prisma.$PM25ReadingPayload<ExtArgs>
+        fields: Prisma.PM25ReadingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PM25ReadingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PM25ReadingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PM25ReadingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PM25ReadingPayload>
+          }
+          findFirst: {
+            args: Prisma.PM25ReadingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PM25ReadingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PM25ReadingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PM25ReadingPayload>
+          }
+          findMany: {
+            args: Prisma.PM25ReadingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PM25ReadingPayload>[]
+          }
+          create: {
+            args: Prisma.PM25ReadingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PM25ReadingPayload>
+          }
+          createMany: {
+            args: Prisma.PM25ReadingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PM25ReadingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PM25ReadingPayload>[]
+          }
+          delete: {
+            args: Prisma.PM25ReadingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PM25ReadingPayload>
+          }
+          update: {
+            args: Prisma.PM25ReadingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PM25ReadingPayload>
+          }
+          deleteMany: {
+            args: Prisma.PM25ReadingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PM25ReadingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PM25ReadingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PM25ReadingPayload>[]
+          }
+          upsert: {
+            args: Prisma.PM25ReadingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PM25ReadingPayload>
+          }
+          aggregate: {
+            args: Prisma.PM25ReadingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePM25Reading>
+          }
+          groupBy: {
+            args: Prisma.PM25ReadingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PM25ReadingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PM25ReadingCountArgs<ExtArgs>
+            result: $Utils.Optional<PM25ReadingCountAggregateOutputType> | number
           }
         }
       }
@@ -782,6 +872,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     sensorReading?: SensorReadingOmit
+    pM25Reading?: PM25ReadingOmit
   }
 
   /* Types for Logging */
@@ -1926,6 +2017,1022 @@ export namespace Prisma {
 
 
   /**
+   * Model PM25Reading
+   */
+
+  export type AggregatePM25Reading = {
+    _count: PM25ReadingCountAggregateOutputType | null
+    _avg: PM25ReadingAvgAggregateOutputType | null
+    _sum: PM25ReadingSumAggregateOutputType | null
+    _min: PM25ReadingMinAggregateOutputType | null
+    _max: PM25ReadingMaxAggregateOutputType | null
+  }
+
+  export type PM25ReadingAvgAggregateOutputType = {
+    pm25: number | null
+  }
+
+  export type PM25ReadingSumAggregateOutputType = {
+    pm25: number | null
+  }
+
+  export type PM25ReadingMinAggregateOutputType = {
+    id: string | null
+    deviceId: string | null
+    pm25: number | null
+    createdAt: Date | null
+  }
+
+  export type PM25ReadingMaxAggregateOutputType = {
+    id: string | null
+    deviceId: string | null
+    pm25: number | null
+    createdAt: Date | null
+  }
+
+  export type PM25ReadingCountAggregateOutputType = {
+    id: number
+    deviceId: number
+    pm25: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PM25ReadingAvgAggregateInputType = {
+    pm25?: true
+  }
+
+  export type PM25ReadingSumAggregateInputType = {
+    pm25?: true
+  }
+
+  export type PM25ReadingMinAggregateInputType = {
+    id?: true
+    deviceId?: true
+    pm25?: true
+    createdAt?: true
+  }
+
+  export type PM25ReadingMaxAggregateInputType = {
+    id?: true
+    deviceId?: true
+    pm25?: true
+    createdAt?: true
+  }
+
+  export type PM25ReadingCountAggregateInputType = {
+    id?: true
+    deviceId?: true
+    pm25?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PM25ReadingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PM25Reading to aggregate.
+     */
+    where?: PM25ReadingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PM25Readings to fetch.
+     */
+    orderBy?: PM25ReadingOrderByWithRelationInput | PM25ReadingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PM25ReadingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PM25Readings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PM25Readings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PM25Readings
+    **/
+    _count?: true | PM25ReadingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PM25ReadingAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PM25ReadingSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PM25ReadingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PM25ReadingMaxAggregateInputType
+  }
+
+  export type GetPM25ReadingAggregateType<T extends PM25ReadingAggregateArgs> = {
+        [P in keyof T & keyof AggregatePM25Reading]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePM25Reading[P]>
+      : GetScalarType<T[P], AggregatePM25Reading[P]>
+  }
+
+
+
+
+  export type PM25ReadingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PM25ReadingWhereInput
+    orderBy?: PM25ReadingOrderByWithAggregationInput | PM25ReadingOrderByWithAggregationInput[]
+    by: PM25ReadingScalarFieldEnum[] | PM25ReadingScalarFieldEnum
+    having?: PM25ReadingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PM25ReadingCountAggregateInputType | true
+    _avg?: PM25ReadingAvgAggregateInputType
+    _sum?: PM25ReadingSumAggregateInputType
+    _min?: PM25ReadingMinAggregateInputType
+    _max?: PM25ReadingMaxAggregateInputType
+  }
+
+  export type PM25ReadingGroupByOutputType = {
+    id: string
+    deviceId: string
+    pm25: number
+    createdAt: Date
+    _count: PM25ReadingCountAggregateOutputType | null
+    _avg: PM25ReadingAvgAggregateOutputType | null
+    _sum: PM25ReadingSumAggregateOutputType | null
+    _min: PM25ReadingMinAggregateOutputType | null
+    _max: PM25ReadingMaxAggregateOutputType | null
+  }
+
+  type GetPM25ReadingGroupByPayload<T extends PM25ReadingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PM25ReadingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PM25ReadingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PM25ReadingGroupByOutputType[P]>
+            : GetScalarType<T[P], PM25ReadingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PM25ReadingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deviceId?: boolean
+    pm25?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["pM25Reading"]>
+
+  export type PM25ReadingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deviceId?: boolean
+    pm25?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["pM25Reading"]>
+
+  export type PM25ReadingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deviceId?: boolean
+    pm25?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["pM25Reading"]>
+
+  export type PM25ReadingSelectScalar = {
+    id?: boolean
+    deviceId?: boolean
+    pm25?: boolean
+    createdAt?: boolean
+  }
+
+  export type PM25ReadingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "deviceId" | "pm25" | "createdAt", ExtArgs["result"]["pM25Reading"]>
+
+  export type $PM25ReadingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PM25Reading"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      deviceId: string
+      pm25: number
+      createdAt: Date
+    }, ExtArgs["result"]["pM25Reading"]>
+    composites: {}
+  }
+
+  type PM25ReadingGetPayload<S extends boolean | null | undefined | PM25ReadingDefaultArgs> = $Result.GetResult<Prisma.$PM25ReadingPayload, S>
+
+  type PM25ReadingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PM25ReadingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PM25ReadingCountAggregateInputType | true
+    }
+
+  export interface PM25ReadingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PM25Reading'], meta: { name: 'PM25Reading' } }
+    /**
+     * Find zero or one PM25Reading that matches the filter.
+     * @param {PM25ReadingFindUniqueArgs} args - Arguments to find a PM25Reading
+     * @example
+     * // Get one PM25Reading
+     * const pM25Reading = await prisma.pM25Reading.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PM25ReadingFindUniqueArgs>(args: SelectSubset<T, PM25ReadingFindUniqueArgs<ExtArgs>>): Prisma__PM25ReadingClient<$Result.GetResult<Prisma.$PM25ReadingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PM25Reading that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PM25ReadingFindUniqueOrThrowArgs} args - Arguments to find a PM25Reading
+     * @example
+     * // Get one PM25Reading
+     * const pM25Reading = await prisma.pM25Reading.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PM25ReadingFindUniqueOrThrowArgs>(args: SelectSubset<T, PM25ReadingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PM25ReadingClient<$Result.GetResult<Prisma.$PM25ReadingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PM25Reading that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PM25ReadingFindFirstArgs} args - Arguments to find a PM25Reading
+     * @example
+     * // Get one PM25Reading
+     * const pM25Reading = await prisma.pM25Reading.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PM25ReadingFindFirstArgs>(args?: SelectSubset<T, PM25ReadingFindFirstArgs<ExtArgs>>): Prisma__PM25ReadingClient<$Result.GetResult<Prisma.$PM25ReadingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PM25Reading that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PM25ReadingFindFirstOrThrowArgs} args - Arguments to find a PM25Reading
+     * @example
+     * // Get one PM25Reading
+     * const pM25Reading = await prisma.pM25Reading.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PM25ReadingFindFirstOrThrowArgs>(args?: SelectSubset<T, PM25ReadingFindFirstOrThrowArgs<ExtArgs>>): Prisma__PM25ReadingClient<$Result.GetResult<Prisma.$PM25ReadingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PM25Readings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PM25ReadingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PM25Readings
+     * const pM25Readings = await prisma.pM25Reading.findMany()
+     * 
+     * // Get first 10 PM25Readings
+     * const pM25Readings = await prisma.pM25Reading.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pM25ReadingWithIdOnly = await prisma.pM25Reading.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PM25ReadingFindManyArgs>(args?: SelectSubset<T, PM25ReadingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PM25ReadingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PM25Reading.
+     * @param {PM25ReadingCreateArgs} args - Arguments to create a PM25Reading.
+     * @example
+     * // Create one PM25Reading
+     * const PM25Reading = await prisma.pM25Reading.create({
+     *   data: {
+     *     // ... data to create a PM25Reading
+     *   }
+     * })
+     * 
+     */
+    create<T extends PM25ReadingCreateArgs>(args: SelectSubset<T, PM25ReadingCreateArgs<ExtArgs>>): Prisma__PM25ReadingClient<$Result.GetResult<Prisma.$PM25ReadingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PM25Readings.
+     * @param {PM25ReadingCreateManyArgs} args - Arguments to create many PM25Readings.
+     * @example
+     * // Create many PM25Readings
+     * const pM25Reading = await prisma.pM25Reading.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PM25ReadingCreateManyArgs>(args?: SelectSubset<T, PM25ReadingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PM25Readings and returns the data saved in the database.
+     * @param {PM25ReadingCreateManyAndReturnArgs} args - Arguments to create many PM25Readings.
+     * @example
+     * // Create many PM25Readings
+     * const pM25Reading = await prisma.pM25Reading.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PM25Readings and only return the `id`
+     * const pM25ReadingWithIdOnly = await prisma.pM25Reading.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PM25ReadingCreateManyAndReturnArgs>(args?: SelectSubset<T, PM25ReadingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PM25ReadingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PM25Reading.
+     * @param {PM25ReadingDeleteArgs} args - Arguments to delete one PM25Reading.
+     * @example
+     * // Delete one PM25Reading
+     * const PM25Reading = await prisma.pM25Reading.delete({
+     *   where: {
+     *     // ... filter to delete one PM25Reading
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PM25ReadingDeleteArgs>(args: SelectSubset<T, PM25ReadingDeleteArgs<ExtArgs>>): Prisma__PM25ReadingClient<$Result.GetResult<Prisma.$PM25ReadingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PM25Reading.
+     * @param {PM25ReadingUpdateArgs} args - Arguments to update one PM25Reading.
+     * @example
+     * // Update one PM25Reading
+     * const pM25Reading = await prisma.pM25Reading.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PM25ReadingUpdateArgs>(args: SelectSubset<T, PM25ReadingUpdateArgs<ExtArgs>>): Prisma__PM25ReadingClient<$Result.GetResult<Prisma.$PM25ReadingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PM25Readings.
+     * @param {PM25ReadingDeleteManyArgs} args - Arguments to filter PM25Readings to delete.
+     * @example
+     * // Delete a few PM25Readings
+     * const { count } = await prisma.pM25Reading.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PM25ReadingDeleteManyArgs>(args?: SelectSubset<T, PM25ReadingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PM25Readings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PM25ReadingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PM25Readings
+     * const pM25Reading = await prisma.pM25Reading.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PM25ReadingUpdateManyArgs>(args: SelectSubset<T, PM25ReadingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PM25Readings and returns the data updated in the database.
+     * @param {PM25ReadingUpdateManyAndReturnArgs} args - Arguments to update many PM25Readings.
+     * @example
+     * // Update many PM25Readings
+     * const pM25Reading = await prisma.pM25Reading.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PM25Readings and only return the `id`
+     * const pM25ReadingWithIdOnly = await prisma.pM25Reading.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PM25ReadingUpdateManyAndReturnArgs>(args: SelectSubset<T, PM25ReadingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PM25ReadingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PM25Reading.
+     * @param {PM25ReadingUpsertArgs} args - Arguments to update or create a PM25Reading.
+     * @example
+     * // Update or create a PM25Reading
+     * const pM25Reading = await prisma.pM25Reading.upsert({
+     *   create: {
+     *     // ... data to create a PM25Reading
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PM25Reading we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PM25ReadingUpsertArgs>(args: SelectSubset<T, PM25ReadingUpsertArgs<ExtArgs>>): Prisma__PM25ReadingClient<$Result.GetResult<Prisma.$PM25ReadingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PM25Readings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PM25ReadingCountArgs} args - Arguments to filter PM25Readings to count.
+     * @example
+     * // Count the number of PM25Readings
+     * const count = await prisma.pM25Reading.count({
+     *   where: {
+     *     // ... the filter for the PM25Readings we want to count
+     *   }
+     * })
+    **/
+    count<T extends PM25ReadingCountArgs>(
+      args?: Subset<T, PM25ReadingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PM25ReadingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PM25Reading.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PM25ReadingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PM25ReadingAggregateArgs>(args: Subset<T, PM25ReadingAggregateArgs>): Prisma.PrismaPromise<GetPM25ReadingAggregateType<T>>
+
+    /**
+     * Group by PM25Reading.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PM25ReadingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PM25ReadingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PM25ReadingGroupByArgs['orderBy'] }
+        : { orderBy?: PM25ReadingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PM25ReadingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPM25ReadingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PM25Reading model
+   */
+  readonly fields: PM25ReadingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PM25Reading.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PM25ReadingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PM25Reading model
+   */
+  interface PM25ReadingFieldRefs {
+    readonly id: FieldRef<"PM25Reading", 'String'>
+    readonly deviceId: FieldRef<"PM25Reading", 'String'>
+    readonly pm25: FieldRef<"PM25Reading", 'Float'>
+    readonly createdAt: FieldRef<"PM25Reading", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PM25Reading findUnique
+   */
+  export type PM25ReadingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+    /**
+     * Filter, which PM25Reading to fetch.
+     */
+    where: PM25ReadingWhereUniqueInput
+  }
+
+  /**
+   * PM25Reading findUniqueOrThrow
+   */
+  export type PM25ReadingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+    /**
+     * Filter, which PM25Reading to fetch.
+     */
+    where: PM25ReadingWhereUniqueInput
+  }
+
+  /**
+   * PM25Reading findFirst
+   */
+  export type PM25ReadingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+    /**
+     * Filter, which PM25Reading to fetch.
+     */
+    where?: PM25ReadingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PM25Readings to fetch.
+     */
+    orderBy?: PM25ReadingOrderByWithRelationInput | PM25ReadingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PM25Readings.
+     */
+    cursor?: PM25ReadingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PM25Readings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PM25Readings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PM25Readings.
+     */
+    distinct?: PM25ReadingScalarFieldEnum | PM25ReadingScalarFieldEnum[]
+  }
+
+  /**
+   * PM25Reading findFirstOrThrow
+   */
+  export type PM25ReadingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+    /**
+     * Filter, which PM25Reading to fetch.
+     */
+    where?: PM25ReadingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PM25Readings to fetch.
+     */
+    orderBy?: PM25ReadingOrderByWithRelationInput | PM25ReadingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PM25Readings.
+     */
+    cursor?: PM25ReadingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PM25Readings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PM25Readings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PM25Readings.
+     */
+    distinct?: PM25ReadingScalarFieldEnum | PM25ReadingScalarFieldEnum[]
+  }
+
+  /**
+   * PM25Reading findMany
+   */
+  export type PM25ReadingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+    /**
+     * Filter, which PM25Readings to fetch.
+     */
+    where?: PM25ReadingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PM25Readings to fetch.
+     */
+    orderBy?: PM25ReadingOrderByWithRelationInput | PM25ReadingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PM25Readings.
+     */
+    cursor?: PM25ReadingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PM25Readings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PM25Readings.
+     */
+    skip?: number
+    distinct?: PM25ReadingScalarFieldEnum | PM25ReadingScalarFieldEnum[]
+  }
+
+  /**
+   * PM25Reading create
+   */
+  export type PM25ReadingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+    /**
+     * The data needed to create a PM25Reading.
+     */
+    data: XOR<PM25ReadingCreateInput, PM25ReadingUncheckedCreateInput>
+  }
+
+  /**
+   * PM25Reading createMany
+   */
+  export type PM25ReadingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PM25Readings.
+     */
+    data: PM25ReadingCreateManyInput | PM25ReadingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PM25Reading createManyAndReturn
+   */
+  export type PM25ReadingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+    /**
+     * The data used to create many PM25Readings.
+     */
+    data: PM25ReadingCreateManyInput | PM25ReadingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PM25Reading update
+   */
+  export type PM25ReadingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+    /**
+     * The data needed to update a PM25Reading.
+     */
+    data: XOR<PM25ReadingUpdateInput, PM25ReadingUncheckedUpdateInput>
+    /**
+     * Choose, which PM25Reading to update.
+     */
+    where: PM25ReadingWhereUniqueInput
+  }
+
+  /**
+   * PM25Reading updateMany
+   */
+  export type PM25ReadingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PM25Readings.
+     */
+    data: XOR<PM25ReadingUpdateManyMutationInput, PM25ReadingUncheckedUpdateManyInput>
+    /**
+     * Filter which PM25Readings to update
+     */
+    where?: PM25ReadingWhereInput
+    /**
+     * Limit how many PM25Readings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PM25Reading updateManyAndReturn
+   */
+  export type PM25ReadingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+    /**
+     * The data used to update PM25Readings.
+     */
+    data: XOR<PM25ReadingUpdateManyMutationInput, PM25ReadingUncheckedUpdateManyInput>
+    /**
+     * Filter which PM25Readings to update
+     */
+    where?: PM25ReadingWhereInput
+    /**
+     * Limit how many PM25Readings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PM25Reading upsert
+   */
+  export type PM25ReadingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+    /**
+     * The filter to search for the PM25Reading to update in case it exists.
+     */
+    where: PM25ReadingWhereUniqueInput
+    /**
+     * In case the PM25Reading found by the `where` argument doesn't exist, create a new PM25Reading with this data.
+     */
+    create: XOR<PM25ReadingCreateInput, PM25ReadingUncheckedCreateInput>
+    /**
+     * In case the PM25Reading was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PM25ReadingUpdateInput, PM25ReadingUncheckedUpdateInput>
+  }
+
+  /**
+   * PM25Reading delete
+   */
+  export type PM25ReadingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+    /**
+     * Filter which PM25Reading to delete.
+     */
+    where: PM25ReadingWhereUniqueInput
+  }
+
+  /**
+   * PM25Reading deleteMany
+   */
+  export type PM25ReadingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PM25Readings to delete
+     */
+    where?: PM25ReadingWhereInput
+    /**
+     * Limit how many PM25Readings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PM25Reading without action
+   */
+  export type PM25ReadingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PM25Reading
+     */
+    select?: PM25ReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PM25Reading
+     */
+    omit?: PM25ReadingOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -1950,6 +3057,16 @@ export namespace Prisma {
   };
 
   export type SensorReadingScalarFieldEnum = (typeof SensorReadingScalarFieldEnum)[keyof typeof SensorReadingScalarFieldEnum]
+
+
+  export const PM25ReadingScalarFieldEnum: {
+    id: 'id',
+    deviceId: 'deviceId',
+    pm25: 'pm25',
+    createdAt: 'createdAt'
+  };
+
+  export type PM25ReadingScalarFieldEnum = (typeof PM25ReadingScalarFieldEnum)[keyof typeof PM25ReadingScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -2096,6 +3213,55 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"SensorReading"> | Date | string
   }
 
+  export type PM25ReadingWhereInput = {
+    AND?: PM25ReadingWhereInput | PM25ReadingWhereInput[]
+    OR?: PM25ReadingWhereInput[]
+    NOT?: PM25ReadingWhereInput | PM25ReadingWhereInput[]
+    id?: StringFilter<"PM25Reading"> | string
+    deviceId?: StringFilter<"PM25Reading"> | string
+    pm25?: FloatFilter<"PM25Reading"> | number
+    createdAt?: DateTimeFilter<"PM25Reading"> | Date | string
+  }
+
+  export type PM25ReadingOrderByWithRelationInput = {
+    id?: SortOrder
+    deviceId?: SortOrder
+    pm25?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PM25ReadingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PM25ReadingWhereInput | PM25ReadingWhereInput[]
+    OR?: PM25ReadingWhereInput[]
+    NOT?: PM25ReadingWhereInput | PM25ReadingWhereInput[]
+    deviceId?: StringFilter<"PM25Reading"> | string
+    pm25?: FloatFilter<"PM25Reading"> | number
+    createdAt?: DateTimeFilter<"PM25Reading"> | Date | string
+  }, "id">
+
+  export type PM25ReadingOrderByWithAggregationInput = {
+    id?: SortOrder
+    deviceId?: SortOrder
+    pm25?: SortOrder
+    createdAt?: SortOrder
+    _count?: PM25ReadingCountOrderByAggregateInput
+    _avg?: PM25ReadingAvgOrderByAggregateInput
+    _max?: PM25ReadingMaxOrderByAggregateInput
+    _min?: PM25ReadingMinOrderByAggregateInput
+    _sum?: PM25ReadingSumOrderByAggregateInput
+  }
+
+  export type PM25ReadingScalarWhereWithAggregatesInput = {
+    AND?: PM25ReadingScalarWhereWithAggregatesInput | PM25ReadingScalarWhereWithAggregatesInput[]
+    OR?: PM25ReadingScalarWhereWithAggregatesInput[]
+    NOT?: PM25ReadingScalarWhereWithAggregatesInput | PM25ReadingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PM25Reading"> | string
+    deviceId?: StringWithAggregatesFilter<"PM25Reading"> | string
+    pm25?: FloatWithAggregatesFilter<"PM25Reading"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"PM25Reading"> | Date | string
+  }
+
   export type SensorReadingCreateInput = {
     id?: string
     deviceId: string
@@ -2163,6 +3329,55 @@ export namespace Prisma {
     co2?: FloatFieldUpdateOperationsInput | number
     temperature?: FloatFieldUpdateOperationsInput | number
     humidity?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PM25ReadingCreateInput = {
+    id?: string
+    deviceId: string
+    pm25: number
+    createdAt?: Date | string
+  }
+
+  export type PM25ReadingUncheckedCreateInput = {
+    id?: string
+    deviceId: string
+    pm25: number
+    createdAt?: Date | string
+  }
+
+  export type PM25ReadingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deviceId?: StringFieldUpdateOperationsInput | string
+    pm25?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PM25ReadingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deviceId?: StringFieldUpdateOperationsInput | string
+    pm25?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PM25ReadingCreateManyInput = {
+    id?: string
+    deviceId: string
+    pm25: number
+    createdAt?: Date | string
+  }
+
+  export type PM25ReadingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deviceId?: StringFieldUpdateOperationsInput | string
+    pm25?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PM25ReadingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deviceId?: StringFieldUpdateOperationsInput | string
+    pm25?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -2291,6 +3506,35 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type PM25ReadingCountOrderByAggregateInput = {
+    id?: SortOrder
+    deviceId?: SortOrder
+    pm25?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PM25ReadingAvgOrderByAggregateInput = {
+    pm25?: SortOrder
+  }
+
+  export type PM25ReadingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    deviceId?: SortOrder
+    pm25?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PM25ReadingMinOrderByAggregateInput = {
+    id?: SortOrder
+    deviceId?: SortOrder
+    pm25?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PM25ReadingSumOrderByAggregateInput = {
+    pm25?: SortOrder
   }
 
   export type StringFieldUpdateOperationsInput = {

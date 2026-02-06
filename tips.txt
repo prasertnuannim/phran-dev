@@ -3,3 +3,14 @@
 npx prisma generate --schema=src/server/db/sensor/prisma/schema.prisma
 
 npx prisma generate --schema=src/server/db/sensor/prisma/schema.prisma
+
+
+
+# auth
+PRISMA_SCHEMA=auth npx prisma migrate dev
+
+# sensor
+PRISMA_SCHEMA=sensor npx prisma migrate dev
+
+# generate client
+PRISMA_SCHEMA=sensor npx prisma generate

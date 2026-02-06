@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "prisma:generate": "prisma generate",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "prisma:sensor:migrate": "PRISMA_SCHEMA=sensor npx prisma migrate dev",
+    "prisma:sensor:reset": "PRISMA_SCHEMA=sensor npx prisma migrate reset"
   },
   "prisma": {
     "schema": "./src/server/db/auth/prisma/schema.prisma"

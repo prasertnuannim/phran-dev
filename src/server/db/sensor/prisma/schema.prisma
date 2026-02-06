@@ -16,3 +16,10 @@ model SensorReading {
   humidity    Float
   createdAt   DateTime @default(now())
 }
+
+model PM25Reading {
+  id        String   @id @default(cuid())
+  deviceId  String
+  pm25      Float
+  createdAt DateTime @default(now())
+}
