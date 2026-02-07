@@ -45,6 +45,20 @@ export const Pm25ReadingService = {
     return Pm25ReadingMapper.toDomain(data);
   },
 
+  async getLatestAny(): Promise<Pm25Reading> {
+    const data = await Pm25ReadingRepository.latest();
+
+    if (!data) {
+      throw createAppError(
+        "NOT_FOUND",
+        "No PM2.5 data",
+        404
+      );
+    }
+
+    return Pm25ReadingMapper.toDomain(data);
+  },
+
   async getHistory(
     deviceId: string,
     hours = 24

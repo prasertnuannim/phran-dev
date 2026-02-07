@@ -25,6 +25,12 @@ export const Pm25ReadingRepository = {
     });
   },
 
+  latest: async (): Promise<PM25ReadingModel | null> => {
+    return sensorDb.pM25Reading.findFirst({
+      orderBy: { createdAt: "desc" },
+    });
+  },
+
   findSince: async (
     deviceId: string,
     since: Date,
