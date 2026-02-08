@@ -82,31 +82,50 @@ export default function DashboardPage() {
     ? `${latest.humidity} ${isHumidityNormal ? "(ปกติ)" : "(ผิดปกติ)"}`
     : "--";
 
+  const dateFormatter = new Intl.DateTimeFormat("th-TH", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "Asia/Bangkok",
+  });
+
+  const hourFormatter = new Intl.DateTimeFormat("th-TH", {
+    hour: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Bangkok",
+  });
+
   const pm25CreatedAt = latestPm25
-    ? new Intl.DateTimeFormat("th-TH", {
-        dateStyle: "medium",
-        timeStyle: "short",
-        hour12: false,
-        timeZone: "Asia/Bangkok",
-      }).format(new Date(latestPm25.createdAt))
+    ? `ล่าสุด ${dateFormatter.format(new Date(latestPm25.createdAt))} : ${hourFormatter.format(new Date(latestPm25.createdAt))}`
     : null;
+
+  console.log("pm25CreatedAt>>", pm25CreatedAt);
+  function getPm25Color(pm?: number) {
+    if (!pm) return "text-gray-400";
+    if (pm <= 15) return "text-emerald-400";
+    if (pm <= 25) return "text-yellow-400";
+    if (pm <= 37) return "text-orange-400";
+    if (pm <= 50) return "text-red-400";
+
+    return "text-purple-400";
+  }
 
   return (
     <>
       <div className="mb-2 flex w-full justify-end">
-        <p
-          className="
-      text-lg md:text-xl font-medium
-      bg-gradient-to-l from-sky-500 gray-100 to-gray-300
-      bg-clip-text text-transparent
-      tracking-tight
-    "
-        >
-          ค่าฝุ่นภายในบ้าน{" "}
-          {latestPm25 ? `: ${latestPm25.pm25} µg/m³` : ": -- µg/m³"}
+        <p className="text-lg md:text-xl font-medium tracking-tight text-gray-300">
+          ค่าฝุ่นภายในบ้าน :
+          <span
+            className={`ml-2 font-semibold ${getPm25Color(latestPm25?.pm25)}`}
+          >
+            {latestPm25 ? latestPm25.pm25 : "--"}
+          </span>
           {pm25CreatedAt && (
-            <span className="ml-2 text-gray-400 font-normal text-sm">
-              (ล่าสุด {pm25CreatedAt})
+            <span className="ml-2 text-sm text-gray-400 font-normal">
+              µg/m³{" "}
+              <span className="ml-2 text-xs text-gray-500">
+                {pm25CreatedAt}
+              </span>
             </span>
           )}
         </p>
