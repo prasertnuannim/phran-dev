@@ -30,9 +30,7 @@ export function TripleChart({ data, range }: TripleChartProps) {
     const labels = data.map((e) => new Date(e.createdAt).toLocaleString("th-TH", labelFormat));
 
     return (
-        <div className="w-full h-[300px] md:h-[400px]
-                    backdrop-blur-xl bg-white
-                    rounded-2xl p-4 border border-white/10">
+        <div className="dashboard-chart-canvas">
             {/* Temperature shifts to green when within range, red when out-of-range */}
 
             <Line
@@ -40,7 +38,7 @@ export function TripleChart({ data, range }: TripleChartProps) {
                     labels,
                     datasets: [
                         {
-                            label: "Temperature",
+                            label: "อุณหภูมิ (°C)",
                             data: data.map((e) => e.temperature),
                             borderColor: (ctx) =>
                                 isTemperatureOutOfRange(
@@ -67,7 +65,7 @@ export function TripleChart({ data, range }: TripleChartProps) {
                             pointRadius: 0
                         },
                         {
-                            label: "Humidity",
+                            label: "ความชื้น (%)",
                             data: data.map((e) => e.humidity),
                             borderColor: (ctx) =>
                                 isHumidityOutOfRange(typeof ctx.raw === "number" ? ctx.raw : null)
@@ -100,7 +98,7 @@ export function TripleChart({ data, range }: TripleChartProps) {
                     plugins: {
                         legend: {
                             labels: {
-                                color: "#ccc",
+                                color: "#52657b",
                                 usePointStyle: true,       // 👈 ใช้วงกลมแทนกล่อง
                                 pointStyle: "circle",      // 👈 วงกลมทึบ
                                 boxWidth: 10,
@@ -111,12 +109,12 @@ export function TripleChart({ data, range }: TripleChartProps) {
 
                     scales: {
                         x: {
-                            ticks: { color: "#777" },
-                            grid: { color: "rgba(255,255,255,0.05)" },
+                            ticks: { color: "#768396" },
+                            grid: { color: "rgba(148,163,184,0.14)" },
                         },
                         y: {
-                            ticks: { color: "#777" },
-                            grid: { color: "rgba(255,255,255,0.05)" },
+                            ticks: { color: "#768396" },
+                            grid: { color: "rgba(148,163,184,0.14)" },
                         },
                     },
                 }}

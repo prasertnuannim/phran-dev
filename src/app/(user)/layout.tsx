@@ -13,17 +13,9 @@ export default async function DashboardLayout({
   if (!session?.user?.id || !["admin", "user"].includes(session.user.role ?? "")) redirect("/");
 
   return (
-    <div className="">
-      {/* Sidebar */}
-      {/* <Sidebar /> */}
-
-      <div className="flex flex-col">
-        {/* Navbar */}
-        <Navbar />
-
-        {/* Main Content */}
-        <main className="p-8">{children}</main>
-      </div>
+    <div className="dashboard-site">
+      <Navbar />
+      <main className="dashboard-main">{children}</main>
     </div>
   );
 }

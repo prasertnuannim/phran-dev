@@ -10,7 +10,6 @@ import {
   getSensorData,
   type LatestPm25Snapshot,
 } from "./action";
-import Loading from "@/components/form/loading";
 import { RefreshCw } from "lucide-react";
 
 type DashboardActionState = {
@@ -99,102 +98,54 @@ export default function DashboardPage() {
     ? `ล่าสุด ${dateFormatter.format(new Date(latestPm25.createdAt))} : ${hourFormatter.format(new Date(latestPm25.createdAt))}`
     : null;
 
-  console.log("pm25CreatedAt>>", pm25CreatedAt);
   function getPm25Color(pm?: number) {
     if (!pm) return "text-gray-400";
-    if (pm <= 15) return "text-emerald-400";
-    if (pm <= 25) return "text-yellow-400";
-    if (pm <= 37) return "text-orange-400";
-    if (pm <= 50) return "text-red-400";
+    if (pm <= 15) return "text-emerald-600";
+    if (pm <= 25) return "text-yellow-600";
+    if (pm <= 37) return "text-orange-600";
+    if (pm <= 50) return "text-red-600";
 
-    return "text-purple-400";
+    return "text-purple-600";
   }
+
+  const pending = actionPending || isTransitionPending;
 
   return (
     <>
-      <div className="mb-2 flex w-full justify-end">
-        <p className="text-lg md:text-xl font-medium tracking-tight text-gray-300">
-          ค่าฝุ่นภายในบ้าน :
-          <span
-            className={`ml-2 font-semibold ${getPm25Color(latestPm25?.pm25)}`}
-          >
-            {latestPm25 ? latestPm25.pm25 : "--"}
-          </span>
-          {pm25CreatedAt && (
-            <span className="ml-2 text-sm text-gray-400 font-normal">
-              µg/m³{" "}
-              <span className="ml-2 text-xs text-gray-500">
-                {pm25CreatedAt}
-              </span>
-            </span>
-          )}
-        </p>
+      <div className="dashboard-heading">
+        <div>
+          <div className="eyebrow">YOUR CONNECTED SPACE</div>
+          <h1>Smart Home</h1>
+          <p>ติดตามสภาพอากาศและคุณภาพอากาศภายในบ้าน</p>
+        </div>
+        <div className="dashboard-air-quality">
+          <span>ค่าฝุ่น PM2.5 ภายในบ้าน</span>
+          <strong className={getPm25Color(latestPm25?.pm25)}>{latestPm25 ? latestPm25.pm25 : "--"}<small> µg/m³</small></strong>
+          <small>{pm25CreatedAt ?? "ยังไม่มีข้อมูลล่าสุด"}</small>
+        </div>
       </div>
 
-      <p className="text-lg md:text-xl font-semibold text-gray-400 tracking-tight">
-        ค่าสภาพอากาศภายในบ้าน
-      </p>
-
-      <div className="relative overflow-hidden min-h-auto px-6 pt-5 bg-linear-to-t from-sky-200 to-gray-200 shadow-lg backdrop-blur-2xl text-white/90 font-[450] rounded-lg pb-10">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10 shadow-md"
-        ></div>
-        <div className="flex items-center gap-4">
-          <FilterTabs value={state.range} onChange={handleRangeChange} />
-
-          <button
-            type="button"
-            onClick={handleRefresh}
-            disabled={actionPending || isTransitionPending}
-            className="
-      group flex h-10 w-10 items-center justify-center rounded-full
-      bg-white/80 shadow hover:bg-white transition text-gray-700
-      disabled:opacity-60 disabled:cursor-not-allowed
-      hover:shadow-md hover:scale-[1.03]
-    "
-            aria-label="Refresh"
-          >
-            <RefreshCw
-              className="
-        h-5 w-5
-        transition-transform duration-500 ease-out
-        group-hover:rotate-180
-      "
-              aria-hidden
-            />
-          </button>
+      <section className="dashboard-panel" aria-labelledby="climate-heading" aria-busy={pending}>
+        <div className="dashboard-toolbar">
+          <h2 id="climate-heading">สภาพอากาศภายในบ้าน</h2>
+          <div className="dashboard-controls">
+            <FilterTabs value={state.range} onChange={handleRangeChange} loading={pending} />
+            <button type="button" onClick={handleRefresh} disabled={pending} className="dashboard-refresh" aria-label="รีเฟรชข้อมูล">
+              <RefreshCw size={17} className={pending ? "animate-spin" : undefined} aria-hidden="true" />
+            </button>
+          </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6 mb-10">
-          <StatCard
-            title="อุณหภูมิ (°C)"
-            value={temperatureValue}
-            color={isTemperatureNormal ? "green" : "red"}
-            delay="100ms"
-          />
-          <StatCard
-            title="ความชื้น (%)"
-            value={humidityValue}
-            color={isHumidityNormal ? "blue" : "red"}
-            delay="200ms"
-          />
+        <div className="dashboard-stats">
+          <StatCard title="อุณหภูมิ (°C)" value={temperatureValue} color={isTemperatureNormal ? "green" : "red"} />
+          <StatCard title="ความชื้น (%)" value={humidityValue} color={isHumidityNormal ? "blue" : "red"} />
         </div>
-
-        <div
-          className="
-          backdrop-blur-md bg-white/[0.04]
-          rounded-2xl
-          shadow-xl
-        "
-        >
+        <div className="dashboard-chart">
           <TripleChart data={state.data} range={state.range} />
         </div>
-
-        {(actionPending || isTransitionPending) && (
-          <Loading message="Loading" />
-        )}
-      </div>
+        <p className="dashboard-data-status" role="status">
+          {pending ? "กำลังโหลดข้อมูล…" : state.data.length === 0 ? "ยังไม่มีข้อมูลในช่วงเวลาที่เลือก" : `แสดงข้อมูล ${state.data.length} รายการ`}
+        </p>
+      </section>
     </>
   );
 }
