@@ -5,12 +5,14 @@ import { Loader2 } from "lucide-react";
 
 type SubmitButtonProps = {
   text: string;
+  pendingText?: string;
   className?: string;
   isPending: boolean;
 };
 
 export function SubmitButton({
   text,
+  pendingText = "Processing...",
   className,
   isPending = false,
 }: SubmitButtonProps) {
@@ -30,7 +32,7 @@ export function SubmitButton({
       ].join(" ")}
     >
       {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-      {busy ? "Processing..." : text}
+      {busy ? pendingText : text}
     </Button>
   );
 }

@@ -1,13 +1,19 @@
-import Hero from "@/components/sections/Hero";
+import { getPublicLanguage, publicMetadata } from "@/lib/publicMetadata";
+import { redirect } from "next/navigation";
+import { auth, resolveRoleRedirectPath } from "@/server/services/auth/authService";
 import About from "@/components/sections/About";
-import Contact from "@/components/sections/Contact";
+import Architecture from "@/components/sections/Architecture";
+import Hero from "@/components/sections/Hero";
+import PublicShell from "@/components/sections/PublicShell";
 
 export default async function Page() {
-  return (
-    <main className="snap-y snap-mandatory overflow-y-auto scroll-smooth">
-      <Hero />
-      <About />
-      <Contact />
-    </main>
-  );
+  const language = await getPublicLanguage();
+  const session = await auth();
+  const destination = resolveRoleRedirectPath(session?.user?.role);
+  if (session?.user && destination !== "/") redirect(destination);
+  return <PublicShell initialLanguage={language} active="home"><Hero /><About /><Architecture /></PublicShell>;
+}
+
+export async function generateMetadata() {
+  return publicMetadata("home");
 }

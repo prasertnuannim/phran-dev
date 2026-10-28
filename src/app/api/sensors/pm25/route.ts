@@ -4,7 +4,7 @@ import { AnyError } from "@/types/errors";
 import { Pm25ReadingService } from "@/server/services/pm25ReadingService";
 import { RateLimiter } from "@/server/security/rateLimiter";
 
-const limiter = RateLimiter(30, 60); // 30 req/min per device
+const limiter = RateLimiter(30, 60, "sensor:pm25"); // 30 req/min per device
 
 export async function POST(req: NextRequest) {
   try {

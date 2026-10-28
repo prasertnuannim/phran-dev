@@ -1,5 +1,6 @@
+import { getSessionMaxAgeSeconds } from "@/server/services/auth/sessionSettings";
 
-import { resolveSessionMaxAgeSeconds, SessionService } from "@/server/services/auth/sessionService";
+import { SessionService } from "@/server/services/auth/sessionService";
 import { redirect } from "next/navigation";
 import { AuthSettingsForm } from "./authSettingsForm";
 
@@ -11,7 +12,7 @@ export default async function AuthSettingsPage() {
   if (!session?.user) redirect("/");
   if (session.user.role !== "admin") redirect("/");
 
-  const sessionMaxAgeSeconds = resolveSessionMaxAgeSeconds(process.env.SESSION_MAX_AGE);
+  const sessionMaxAgeSeconds = await getSessionMaxAgeSeconds();
 
   return (
     <main className="mx-auto py-12">

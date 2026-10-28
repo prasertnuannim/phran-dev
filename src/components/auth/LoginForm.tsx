@@ -1,5 +1,6 @@
 "use client";
 
+import { useLanguage } from "../sections/LanguageProvider";
 import { useActionState, useState } from "react";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "@/components/form/submitButton";
@@ -10,6 +11,7 @@ import { loginUser } from "@/app/actions/loginForm";
 import RegisterModal from "./RegisterForm";
 
 export default function LoginForm() {
+  const { t } = useLanguage();
   const initialState: LoginFormState = {
     errors: {},
     //values: { email: "admin@example.com", password: "admin123" },
@@ -29,26 +31,26 @@ export default function LoginForm() {
         <FormInput
           name="email"
           type="email"
-          label="Email"
-          placeholder="Your email"
+          label={t("Email")}
+          placeholder={t("Your email")}
           defaultValue={state.values?.email}
-          error={state.errors?.email}
+          error={state.errors?.email ? t(state.errors.email) : undefined}
         />
         <FormInput
           name="password"
           type="password"
-          label="Password"
-          placeholder="Your password"
+          label={t("Password")}
+          placeholder={t("Your password")}
           defaultValue={state.values?.password}
-          error={state.errors?.password}
+          error={state.errors?.password ? t(state.errors.password) : undefined}
         />
-        <SubmitButton text="Login" isPending={isPending} />
+        <SubmitButton pendingText={t("Processing...")} text={t("Login")} isPending={isPending} />
 
         {state.errors?.general && (
           <FormAlert
             variant="error"
-            title="Login failed"
-            message={state.errors?.general}
+            title={t("Login failed")}
+            message={t(state.errors.general)}
           />
         )}
 

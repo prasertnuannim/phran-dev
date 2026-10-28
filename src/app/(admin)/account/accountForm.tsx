@@ -35,21 +35,22 @@ export default function AccountForm() {
     const result = await baseCreateUserAction(formData);
     if (result?.success) {
       const updated = await fetchUsers();
+      setUsers(updated);
       return updated;
     }
     return state;
   };
-  const [state, , isCreatePending] = useActionState<FullUser[], FormData>(createUserAction, users);
+  const [, , isCreatePending] = useActionState<FullUser[], FormData>(createUserAction, users);
 
   useEffect(() => {
-    syncUsers();
-  }, [syncUsers]);
-
-  useEffect(() => {
-    if (state && state.length >= users.length) {
-      setUsers(state);
-    }
-  }, [state]); // eslint-disable-line react-hooks/exhaustive-deps
+    let cancelled = false;
+    fetchUsers().then((data) => {
+      if (!cancelled) setUsers(data);
+    }).finally(() => {
+      if (!cancelled) setIsUsersLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, [fetchUsers]);
 
   const handleUpdateUser = async (id: string, values: Partial<FullUser>) => {
     const upd = {

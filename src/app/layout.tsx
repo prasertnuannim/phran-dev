@@ -1,6 +1,7 @@
+import { getPublicLanguage } from "@/lib/publicMetadata";
 import SessionProvider from "@/components/auth/SessionProvider";
 import "./globals.css";
-import { Plus_Jakarta_Sans, Noto_Sans_Thai } from "next/font/google";
+import { Plus_Jakarta_Sans, Noto_Sans_Thai, Kalam, IBM_Plex_Mono } from "next/font/google";
 import { auth } from "@/server/services/auth/authService";
 import type { Metadata } from "next";
 
@@ -10,21 +11,38 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+const kalam = Kalam({
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  variable: "--font-kalam",
+  display: "swap",
+});
+
+const telemetryMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-telemetry-mono",
+  display: "swap",
+});
+
 const notoThai = Noto_Sans_Thai({
   subsets: ["thai", "latin"],
   variable: "--font-noto-thai",
   display: "swap",
 });
 
-// ✅ ข้อมูล SEO / OG / Twitter / JSON-LD
+const siteTitle = "Phran.Dev – นักพัฒนาอิสระและโซลูชัน Industrial IoT";
+const siteDescription =
+  "รับพัฒนาเว็บไซต์ เว็บแอป และระบบตามความต้องการ พร้อมโซลูชัน Industrial IoT และ Smart Factory เชื่อมต่ออุปกรณ์ ข้อมูล และ Dashboard สำหรับธุรกิจและโรงงาน";
+
+// Shared search and social metadata.
 export const metadata: Metadata = {
   metadataBase: new URL("https://phran.dev"),
   title: {
-    default: "Phran.Dev – สร้างความฝัน ล่าความคิด",
+    default: siteTitle,
     template: "%s | Phran.Dev",
   },
-  description:
-    "Pharan Dev – นักพัฒนาและนักออกแบบที่ล่าความฉลาดในระบบของคุณ (Hunt the intelligence in your system). Where instinct meets innovation.",
+  description: siteDescription,
   keywords: [
     "Pharan Dev",
     "พราน",
@@ -33,14 +51,22 @@ export const metadata: Metadata = {
     "Phran.Dev",
     "Next.js Developer",
     "Full Stack Developer Thailand",
-    "Creative Tech Developer",
-    "System Intelligence",
+    "Freelance Developer",
+    "รับพัฒนาเว็บไซต์",
+    "รับทำเว็บแอป",
+    "Industrial IoT Solutions",
+    "Industrial IoT Engineer",
+    "Smart Factory Engineer",
+    "Industrial IoT",
+    "Smart Factory",
+    "Edge Gateway",
+    "Dashboard",
+    "เชื่อมต่อ API",
   ],
   authors: [{ name: "Pharan Dev", url: "https://phran.dev" }],
   openGraph: {
-    title: "Phran.Dev – ล่าความฉลาดในระบบของคุณ",
-    description:
-      "นักพัฒนาและนักออกแบบที่สร้างระบบอัจฉริยะ ผสานความคิดสร้างสรรค์และเทคโนโลยี",
+    title: siteTitle,
+    description: siteDescription,
     url: "https://phran.dev",
     siteName: "Phran.Dev",
     images: [
@@ -56,9 +82,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Phran.Dev – สร้างความฝัน ล่าความคิด",
-    description:
-      "Where instinct meets innovation. นักพัฒนาและนักออกแบบระบบอัจฉริยะ",
+    title: siteTitle,
+    description: siteDescription,
     images: ["https://phran.dev/images/phran-hunter.png"],
     creator: "@phrandev",
   },
@@ -73,10 +98,11 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
+  const language = await getPublicLanguage();
   return (
     <html
-      lang="th"
-      className={`${plusJakarta.variable} ${notoThai.variable}`}
+      lang={language === "zh" ? "zh-Hans" : language}
+      className={`${plusJakarta.variable} ${notoThai.variable} ${kalam.variable} ${telemetryMono.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -91,9 +117,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               sameAs: [
                 "https://prasertnuannim.vercel.app/#home",
               ],
-              jobTitle: "Full Stack Developer",
-              description:
-                "นักพัฒนาและนักออกแบบที่ล่าความฉลาดในระบบของคุณ (Hunt the intelligence in your system)",
+              jobTitle: "Freelance Developer & Industrial IoT Engineer",
+              email: "phrandev@gmail.com",
+              knowsAbout: ["Web Development", "Web Applications", "API Integration", "Industrial IoT", "Smart Factory"],
+              description: siteDescription,
             }),
           }}
         />

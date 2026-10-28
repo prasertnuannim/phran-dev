@@ -72,8 +72,8 @@ export default function Contact() {
   return (
     <Section
       id="contact"
-      bg="bg-gradient-to-br from-[#e9e6df] via-[#f8f6f1] to-white"
-      className="relative flex items-center justify-center min-h-screen px-6 md:px-20 py-24 md:py-32 text-[#1e293b]"
+      bg=""
+      className="factory-contact"
     >
       <motion.div
         initial={{ opacity: 0, y: 40 }}
@@ -82,7 +82,9 @@ export default function Contact() {
         viewport={{ once: true }}
         className="max-w-lg w-full mx-auto text-center bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-10 border border-gray-200"
       >
-        {/* ✨ Animated intro text */}
+        <div className="eyebrow">GREAT THINGS START WITH A CONVERSATION</div>
+        <h2>Your next big idea.<br /><span className="orange">Let’s make it real.</span></h2>
+        {/* Contact introduction */}
         <motion.div
           className="mb-8 text-gray-600 text-center text-[1rem] leading-relaxed"
           initial="hidden"
@@ -114,6 +116,7 @@ export default function Contact() {
         <form ref={formRef} action={formAction} className="space-y-5">
           <div className="text-left">
             <input
+              aria-label="ชื่อของคุณ"
               name="name"
               type="text"
               placeholder="ชื่อของคุณ"
@@ -130,6 +133,7 @@ export default function Contact() {
           {/* Email */}
           <div className="text-left">
             <input
+              aria-label="อีเมลของคุณ"
               name="email"
               type="email"
               placeholder="อีเมลของคุณ"
@@ -146,6 +150,7 @@ export default function Contact() {
           {/* Message */}
           <div className="text-left">
             <textarea
+              aria-label="ข้อความของคุณ"
               name="message"
               placeholder="ข้อความของคุณ..."
               rows={5}

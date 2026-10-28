@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { auth } from "@/server/services/auth/authService";
 
 export const dynamic = "force-dynamic";
 import Navbar from "./navbar";
@@ -7,6 +9,9 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+  if (!session?.user?.id || !["admin", "user"].includes(session.user.role ?? "")) redirect("/");
+
   return (
     <div className="">
       {/* Sidebar */}

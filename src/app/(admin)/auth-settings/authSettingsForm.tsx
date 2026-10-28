@@ -13,31 +13,33 @@ export function AuthSettingsForm({ sessionMaxAge }: { sessionMaxAge: string }) {
       <form
         action={(formData) => {
           startTransition(async () => {
-            // 🕒 แปลงจาก "นาที" → "วินาที" ก่อนส่งไป server
-            const minutes = Number(formData.get("sessionMaxAge")) || 0;
-            formData.set("sessionMaxAge", String(minutes * 60));
-
-            const res = await updateAuthSettings(formData);
-            if (!res.ok) {
-              setResult("❌ Error");
-              return;
+            try {
+              const minutes = Number(formData.get("sessionMaxAge"));
+              formData.set("sessionMaxAge", String(minutes * 60));
+              await updateAuthSettings(formData);
+              setResult("Saved. Please sign in again.");
+              await signOut({ callbackUrl: "/" });
+            } catch {
+              setResult("Unable to save. Enter a lifetime between 1 and 43200 minutes and try again.");
             }
-            setResult("✅ Saved! Logging out…");
-            await signOut({ callbackUrl: "/" });
           });
         }}
         className="space-y-6"
       >
         <div>
-          <label className="block text-sm font-medium mb-2">
+          <label htmlFor="sessionMaxAge" className="block text-sm font-medium mb-2">
             Session Max Age (Minute)
           </label>
           <input
+            id="sessionMaxAge"
             name="sessionMaxAge"
             defaultValue={Number(sessionMaxAge) / 60} // แปลงจากวินาที → นาที ตอนแสดง
             className="border p-2 rounded w-full"
             type="number"
             min={1}
+            max={43200}
+            step={1}
+            required
           />
         </div>
 
@@ -50,7 +52,7 @@ export function AuthSettingsForm({ sessionMaxAge }: { sessionMaxAge: string }) {
         </button>
 
         {result && (
-          <p className="text-sm text-green-600 mt-3 transition-opacity">
+          <p role="status" className="text-sm mt-3 transition-opacity">
             {result}
           </p>
         )}

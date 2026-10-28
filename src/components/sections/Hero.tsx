@@ -1,87 +1,35 @@
 "use client";
-import { motion } from "framer-motion";
+
+import { useLanguage } from "./LanguageProvider";
+import { ArrowUpRight } from "lucide-react";
+import SectionLink from "./SectionLink";
 import Image from "next/image";
-import Section from "./Section";
-import { ButtonLogin } from "../ButtonLogin";
 
 export default function Hero() {
+  const { t } = useLanguage();
   return (
-    <Section
-      id="home"
-      bg="bg-gradient-to-br from-gray-100 via-sky-200 to-gray-700"
-      className="
-        relative flex flex-col-reverse md:flex-row
-        items-center justify-center min-h-screen overflow-hidden
-        text-[#2b2b2b] px-6 md:px-16
-      "
-    >
-       <ButtonLogin />
-      {/* Left: Text */}
-      <motion.div
-        initial={{ opacity: 0, x: -30 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
-        className="z-10 w-full md:w-1/2 flex flex-col justify-center text-center md:text-left"
-      >
- <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1 }}
-      className="xl:px-20 text-center md:text-left"
-    >
-      <motion.h1
-        initial={{ backgroundPosition: "0% 50%" }}
-        animate={{ backgroundPosition: "100% 50%" }}
-        transition={{
-          repeat: Infinity,
-          repeatType: "reverse",
-          duration: 6,
-          ease: "linear",
-        }}
-        className="text-5xl md:text-6xl font-bold tracking-tight mb-4 bg-linear-to-r from-green-800 via-gray-300 to-green-800
-          bg-size-[200%_200%] bg-clip-text text-transparent"
-      >
-        Phran Dev 
-      </motion.h1>
-
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 1 }}
-        className="
-          text-xl md:text-2xl leading-relaxed mb-8 font-[var(--font-sans)]
-          bg-linear-to-r from-gray-400 via-gray-800 to-gray-400
-          bg-size-[200%_200%]
-          bg-clip-text text-transparent
-          animate-gradient-x
-        "
-      >
-        พรานเดฟ สร้างความฝัน ล่าความคิด  
-        ที่ซึ่งสัญชาตญาณของพราน มาบรรจบกับความคิดสร้างสรรค์ของนักพัฒนา
-      </motion.p>
-    </motion.div>
-      </motion.div>
-
-      {/* Right: Image */}
-      <motion.div
-        initial={{ opacity: 0, x: 40 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
-        className="relative flex justify-center items-center w-full md:w-1/2 h-[55vh] md:h-screen"
-      >
-        <Image
-          src="/images/phran-hunter.png"
-          alt="Pharan Hunter Developer"
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-contain object-center drop-shadow-[0_10px_20px_rgba(0,0,0,0.1)]"
-          loading="eager"
-          priority
-        />
-      </motion.div>
-
-      {/* Soft light overlay */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top_left,rgba(255,255,255,0.4),transparent_70%)]" />
-    </Section>
+    <section id="home" className="factory-hero">
+      <div className="factory-hero-grid">
+        <div className="factory-intro">
+          <div className="eyebrow"><span className="signal-dot" /> {t("Digital solutions. Thoughtfully built.")}</div>
+          <h1>{t("Your ideas, made real.")}<br /><span className="hero-gradient">{t("Beautifully connected.")}</span></h1>
+          <p className="hero-description">{t("From ideas to new possibilities.")}<br />{t("Websites, apps, and systems that work together.")}<br className="desktop-break" /> {t("Designed around your everyday needs.")}</p>
+          <div className="factory-actions"><SectionLink section="about" href="/about" className="factory-primary">{t("Discover the possibilities")} <ArrowUpRight size={18} /></SectionLink></div>
+          <div className="hero-caption"><span>{t("DESIGNED AS ONE")}</span><span>{t("Design. Development. Connection.")}</span></div>
+        </div>
+        <figure className="factory-hero-visual">
+          <Image
+            src="/images/smart-factory-engineer.png"
+            alt={t("วิศวกรตรวจสอบข้อมูลผ่านแท็บเล็ตในโรงงานอัจฉริยะที่เชื่อมต่อเซนเซอร์และแขนกลอุตสาหกรรม")}
+            width={1672}
+            height={941}
+            sizes="(min-width: 1440px) 1440px, 100vw"
+            priority
+          />
+          <figcaption>{t("Technology shaped by people.")}<span>{t("ภาพแนวคิดประกอบบริการ")}</span></figcaption>
+        </figure>
+      </div>
+      <div className="factory-tech-strip"><span>{t("BUILT FOR YOUR NEXT IDEA")}</span><div>WEB <i>/</i> APPS <i>/</i> API <i>/</i> CLOUD <i>/</i> NEXT.JS</div><SectionLink section="architecture" href="/architecture" aria-label={t("Explore system architecture")}><ArrowUpRight size={18}/></SectionLink></div>
+    </section>
   );
 }

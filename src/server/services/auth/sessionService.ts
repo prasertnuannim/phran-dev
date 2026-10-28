@@ -56,10 +56,4 @@ export async function requireServerAuthSession(request?: NextRequest): Promise<S
   return session;
 }
 
-export const SESSION_MAX_AGE_DEFAULT_SECONDS = 60 * 50;
-
-export function resolveSessionMaxAgeSeconds(raw?: string | null): number {
-  const parsed = raw ? Number(raw) : NaN;
-  if (!Number.isFinite(parsed) || parsed <= 0) return SESSION_MAX_AGE_DEFAULT_SECONDS;
-  return Math.floor(parsed);
-}
+export { resolveSessionMaxAgeSeconds } from "./sessionSettings";

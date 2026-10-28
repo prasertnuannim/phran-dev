@@ -1,67 +1,42 @@
 "use client";
 
+import { useLanguage } from "./sections/LanguageProvider";
+import BrandWordmark from "./BrandWordmark";
 import { useState } from "react";
-import { Dialog, DialogPanel } from "@headlessui/react";
+import { Dialog, DialogPanel, DialogTitle, Description } from "@headlessui/react";
+import { X, UserRound } from "lucide-react";
+import Image from "next/image";
 import { SocialSignInButton } from "./auth/SocialSignInButton";
 import { FaGithub } from "react-icons/fa";
 import LoginForm from "./auth/LoginForm";
 
 export function ButtonLogin() {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full flex items-center justify-between px-8 py-4 z-50">
-        <div />
-        <button
-          onClick={() => setIsOpen(true)}
-          className="px-4 py-2 rounded-md border border-white/30 text-white hover:bg-white/10 transition"
-        >
-          Login
+      <div className="factory-login">
+        <button type="button" onClick={() => setIsOpen(true)} aria-haspopup="dialog" aria-label={t("เข้าสู่ระบบ")} title={t("เข้าสู่ระบบ")}>
+          <UserRound size={18} strokeWidth={1.5} aria-hidden="true" />
         </button>
-      </nav>
-
-      <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
-        <div
-          aria-hidden="true"
-          onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm cursor-pointer"
-        />
-
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel
-            className="
-              relative max-w-3xl w-full p-1
-              rounded-2xl border border-white/20
-              bg-white/10 backdrop-blur-xl 
-              shadow-[0_8px_32px_rgba(0,0,0,0.25)]
-              animate-fadeScale
-            "
-          >
-            <div className="flex flex-col md:flex-row overflow-hidden rounded-2xl">
-
-              {/* SOCIAL SECTION */}
-              <div className="flex flex-col justify-center gap-4 p-8 md:w-1/2 bg-white/5 backdrop-blur-lg text-gray-100">
-                <h2 className="text-2xl font-semibold mb-2">Login</h2>
-
-                <SocialSignInButton />
-
-                <SocialSignInButton
-                  provider="github"
-                  label="Continue with GitHub"
-                  icon={<FaGithub className="w-5 h-5 mr-2" />}
-                />
-
-                <p className="mt-3 text-xs text-gray-300">
-                  By logging in, you agree to our Terms of Service.
-                </p>
-              </div>
-
-              {/* EMAIL SECTION */}
-              <div className="flex flex-col justify-center gap-4 p-8 md:w-1/2 bg-black/20 backdrop-blur-lg text-gray-100 border-l border-white/10">
-                <LoginForm />
-              </div>
+      </div>
+      <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="engineer-login-dialog">
+        <div className="engineer-login-backdrop" aria-hidden="true" />
+        <div className="engineer-login-container">
+          <DialogPanel className="engineer-login-panel">
+            <button type="button" className="engineer-login-close" onClick={() => setIsOpen(false)} aria-label={t("ปิดหน้าต่างเข้าสู่ระบบ")}><X size={18} /></button>
+            <div className="engineer-login-mark"><Image src="/images/phran-hunter.png" alt="" width={32} height={48} /></div>
+            <div className="engineer-login-brand"><BrandWordmark /></div>
+            <DialogTitle className="engineer-login-title">{t("Welcome back.")}</DialogTitle>
+            <Description className="engineer-login-description">{t("เข้าสู่ระบบเพื่อจัดการพื้นที่ทำงานของคุณ")}</Description>
+            <div className="engineer-login-social">
+              <SocialSignInButton />
+              <SocialSignInButton provider="github" label={t("Continue with GitHub")} icon={<FaGithub className="h-5 w-5" />} />
             </div>
+            <div className="engineer-login-divider"><span>{t("หรือใช้อีเมล")}</span></div>
+            <div className="engineer-login-form"><LoginForm /></div>
+            <p className="engineer-login-note">{t("Digital solutions. Thoughtfully built.")}</p>
           </DialogPanel>
         </div>
       </Dialog>

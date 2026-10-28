@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import Sidebar from "./sidebar";
 import Navbar from "./navbar";
 import AdminProviders from "./providers";
@@ -9,6 +10,9 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerAuthSession();
+  if (!session?.user?.id) redirect("/");
+  if (session.user.role !== "admin") redirect("/");
+
   const profile = session?.user
     ? {
         name: session.user.name ?? "User",

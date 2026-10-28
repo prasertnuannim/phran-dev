@@ -87,3 +87,15 @@ model Authenticator {
 
   @@id([userId, credentialID])
 }
+model RateLimitBucket {
+  key       String   @id
+  count     Int
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
+model AppSetting {
+  key   String @id
+  value String
+}

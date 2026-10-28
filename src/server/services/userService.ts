@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { prisma } from "@/server/db/auth/client";
 import type { CreateUserDto, UpdateUserDto } from "@/server/dto/user.dto";
 import type { Prisma } from "@prisma/client";
@@ -17,13 +16,12 @@ const create = async (dto: CreateUserDto) => {
   const exists = await prisma.user.findUnique({ where: { email } });
   if (exists) throw new Error("Email already exists");
 
-  const hashedPassword = await bcrypt.hash("sert", 10);
-
   return prisma.user.create({
     data: {
       name,
       email,
-      password: hashedPassword,
+      // Admin-created accounts use their configured OAuth provider, never a shared password.
+      password: null,
       roleId: roleRecord.id,
       emailVerified: null,
       image: null,

@@ -14,7 +14,7 @@ import {
   authUserService,
   authorizeWithCredentialsService,
 } from "@/server/services/auth/authUserService";
-import { resolveSessionMaxAgeSeconds } from "@/server/services/auth/sessionService";
+import { getSessionMaxAgeSeconds } from "./sessionSettings";
 import { AccessRole, normalizeAccessRole } from "@/lib/auth/accessRole";
 
 declare module "next-auth" {
@@ -90,31 +90,20 @@ const handleSignIn: AuthCallbacks["signIn"] = async ({ user, account }) => {
 const handleJWT: AuthCallbacks["jwt"] = async ({
   token,
   user,
-}: AuthJwtCallbackParams): Promise<JWT> => {
+}: AuthJwtCallbackParams): Promise<JWT | null> => {
 
-  let resolvedRole = normalizeAccessRole(token.role);
+  // Refresh identity and permissions on every session read, not only sign-in.
+  const dbUser = token.id
+    ? await prisma.user.findUnique({ where: { id: token.id }, include: { role: true } })
+    : user?.email
+      ? await prisma.user.findUnique({ where: { email: user.email }, include: { role: true } })
+      : null;
 
-  if (user?.email) {
-    token.email = user.email;
-  }
-
-  // 🔥 ดึงจาก DB ทุก provider (นิ่งที่สุด)
-  if (user?.email) {
-    const dbUser = await prisma.user.findUnique({
-      where: { email: user.email },
-      include: { role: true },
-    });
-
-    if (dbUser) {
-      token.id = dbUser.id;
-      resolvedRole =
-        normalizeAccessRole(dbUser.role?.name ?? dbUser.roleId ?? null) ??
-        resolvedRole;
-      token.picture = dbUser.image ?? null;
-    }
-  }
-
-  token.role = resolvedRole ?? AccessRole.Guest;
+  if (!dbUser || dbUser.deletedAt) return null;
+  token.id = dbUser.id;
+  token.email = dbUser.email;
+  token.picture = dbUser.image;
+  token.role = normalizeAccessRole(dbUser.role?.name) ?? AccessRole.Guest;
   return token;
 };
 
@@ -145,12 +134,12 @@ const callbacks: AuthCallbacks = {
   session: handleSession,
 };
 
-const getAuthOptions = (): NextAuthConfig => ({
+const getAuthOptions = async (): Promise<NextAuthConfig> => ({
   secret: process.env.NEXTAUTH_SECRET,
   adapter,
   session: {
     strategy: "jwt",
-    maxAge: resolveSessionMaxAgeSeconds(process.env.SESSION_MAX_AGE),
+    maxAge: await getSessionMaxAgeSeconds(),
   },
   experimental: enableWebAuthn ? { enableWebAuthn: true } : undefined,
   providers: providers(),

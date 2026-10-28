@@ -3,7 +3,10 @@ import type { User as PrismaUser, PrismaClient } from "@prisma/client";
 import { prisma } from "@/server/db/auth/client";
 import { LoginCredentialsInput } from "@/types/auth.type";
 import bcrypt from "bcryptjs";
+import { RateLimiter } from "@/server/security/rateLimiter";
 import { AccessRole, normalizeAccessRole } from "@/lib/auth/accessRole";
+
+const credentialsLimiter = RateLimiter(5, 60, "credentials");
 
 type AuthUser = Pick<NextAuthUser, "email" | "name" | "image"> & { id?: string | null };
 
@@ -81,15 +84,19 @@ const authorizeWithCredentials = async (
   credentials?: Partial<Record<"email" | "password", unknown>>,
 ): Promise<User | null> => {
   const normalized = normalizeCredentials(credentials);
-  const email = normalized?.email;
+  const email = normalized?.email?.trim().toLowerCase();
   const password = normalized?.password;
   if (!email || !password) return null;
 
+  await credentialsLimiter.check(email);
+
   const user = await prisma.user.findFirst({
-    where: { email },
+    where: { email: { equals: email, mode: "insensitive" } },
     include: { role: true },
   });
-  if (!user || !user.password) return null;
+  if (!user || user.deletedAt || !user.password) return null;
+  // Block the legacy shared password for existing accounts as well.
+  if (password === "sert") return null;
 
   const ok = await bcrypt.compare(password, String(user.password));
   if (!ok) return null;

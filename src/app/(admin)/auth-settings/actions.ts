@@ -1,7 +1,8 @@
 "use server";
 
-import { resolveSessionMaxAgeSeconds, SessionService } from "@/server/services/auth/sessionService";
+import { SessionService } from "@/server/services/auth/sessionService";
 
+import { saveSessionMaxAgeSeconds } from "@/server/services/auth/sessionSettings";
 import { revalidatePath } from "next/cache";
 
 
@@ -13,11 +14,10 @@ export async function updateAuthSettings(formData: FormData) {
     throw new Error("Unauthorized");
   }
 
-  const sessionMaxAge = resolveSessionMaxAgeSeconds(formData.get("sessionMaxAge")?.toString());
+  const sessionMaxAge = Number(formData.get("sessionMaxAge"));
 
-  // ตัวอย่าง: update ค่าลง environment (หรือ database setting)
-  process.env.SESSION_MAX_AGE = String(sessionMaxAge);
+  await saveSessionMaxAgeSeconds(sessionMaxAge);
 
-  revalidatePath("/admin/auth-settings");
+  revalidatePath("/auth-settings");
   return { ok: true };
 }
