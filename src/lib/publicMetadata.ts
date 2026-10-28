@@ -1,12 +1,4 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
-import { isLanguage, localizedPath } from "./publicLocale";
-
-export async function getPublicLanguage() {
-  const value = (await headers()).get("x-public-language");
-  return isLanguage(value) ? value : "th";
-}
-
 const copy = {
   home: {
     title: { th: "นักพัฒนาอิสระและโซลูชัน Industrial IoT", en: "Freelance Developer & Industrial IoT Solutions", zh: "自由开发者与工业物联网解决方案" },
@@ -23,15 +15,15 @@ const copy = {
 };
 
 export async function publicMetadata(page: keyof typeof copy): Promise<Metadata> {
-  const language = await getPublicLanguage();
+  const language = "th";
   const path = page === "home" ? "/" : `/${page}`;
   const title = `${copy[page].title[language]} | Phran.Dev`;
   const description = copy[page].description[language];
-  const url = localizedPath(language, path);
+  const url = path;
   const image = { url: "/images/phran-hunter.png", alt: "Phran.Dev" };
   return {
     title: { absolute: title }, description,
-    alternates: { canonical: url, languages: { th: localizedPath("th", path), en: localizedPath("en", path), "zh-Hans": localizedPath("zh", path), "x-default": localizedPath("th", path) } },
+    alternates: { canonical: url },
     openGraph: { title, description, url, siteName: "Phran.Dev", locale: { th: "th_TH", en: "en_US", zh: "zh_CN" }[language], type: "website", images: [image] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };

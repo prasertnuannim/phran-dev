@@ -1,7 +1,5 @@
 "use client";
 
-import { localizedPath } from "@/lib/publicLocale";
-import { useLanguage } from "./LanguageProvider";
 import Link from "next/link";
 
 export default function SectionLink({ section, href, children, ...props }: {
@@ -9,8 +7,7 @@ export default function SectionLink({ section, href, children, ...props }: {
   href: string;
   children: React.ReactNode;
 } & Omit<React.ComponentProps<typeof Link>, "href" | "children">) {
-  const { language } = useLanguage();
-  return <Link {...props} href={localizedPath(language, href)} onClick={(event) => {
+  return <Link {...props} href={href} onClick={(event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
     const target = document.getElementById(section);
     if (!target) return;

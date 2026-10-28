@@ -1,4 +1,3 @@
-import { getPublicLanguage } from "@/lib/publicMetadata";
 import SessionProvider from "@/components/auth/SessionProvider";
 import "./globals.css";
 import { Plus_Jakarta_Sans, Noto_Sans_Thai, Kalam, IBM_Plex_Mono } from "next/font/google";
@@ -98,10 +97,9 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
-  const language = await getPublicLanguage();
   return (
     <html
-      lang={language === "zh" ? "zh-Hans" : language}
+      lang="th"
       className={`${plusJakarta.variable} ${notoThai.variable} ${kalam.variable} ${telemetryMono.variable}`}
       suppressHydrationWarning
     >

@@ -1,6 +1,6 @@
 "use client";
 
-import { localizedPath, type Language } from "@/lib/publicLocale";
+import { type Language } from "@/lib/publicLocale";
 import { LanguageProvider, LanguageSwitcher, useLanguage } from "./LanguageProvider";
 import { Check, Copy, Mail } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -16,7 +16,7 @@ function PublicShellContent({ children, active }: {
   active: "home" | "about" | "architecture";
   initialLanguage?: Language;
 }) {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => {
@@ -36,7 +36,7 @@ function PublicShellContent({ children, active }: {
     <div className="factory-site">
       <LegacySectionRedirect />
       <header className="factory-nav">
-        <Link href={localizedPath(language, "/")} className="factory-brand" aria-label={t("Phran.Dev home")}>
+        <Link href="/" className="factory-brand" aria-label={t("Phran.Dev home")}>
           <BrandWordmark />
         </Link>
         <PublicNavigation active={active} />
@@ -59,7 +59,7 @@ function PublicShellContent({ children, active }: {
         </section>
       </main>
       <footer className="factory-footer">
-        <Link href={localizedPath(language, "/")} aria-label={t("Phran.Dev home")}><BrandWordmark /></Link>
+        <Link href="/" aria-label={t("Phran.Dev home")}><BrandWordmark /></Link>
         <span>{t("ENGINEERED WITH PURPOSE. BUILT TO CONNECT.")}</span>
         <SectionLink section={active === "home" ? "about" : "home"} href={active === "home" ? "/about" : "/"}>{active === "home" ? t("Explore expertise →") : t("← Back to home")}</SectionLink>
       </footer>

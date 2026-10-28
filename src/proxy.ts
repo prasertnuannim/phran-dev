@@ -1,4 +1,3 @@
-import { isLanguage } from "./lib/publicLocale";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
@@ -31,18 +30,9 @@ export async function proxy(req: NextRequest) {
 
   const publicMatch = pathname.match(/^\/(th|en|zh)(\/about|\/architecture)?\/?$/);
   if (publicMatch) {
-    const requestHeaders = new Headers(req.headers);
-    requestHeaders.set("x-public-language", publicMatch[1]);
     const url = req.nextUrl.clone();
     url.pathname = publicMatch[2] || "/";
-    return NextResponse.rewrite(url, { request: { headers: requestHeaders } });
-  }
-  if (["/", "/about", "/architecture"].includes(pathname)) {
-    const url = req.nextUrl.clone();
-    const saved = req.cookies.get("phran-language")?.value ?? null;
-    const language = isLanguage(saved) ? saved : "th";
-    url.pathname = `/${language}${pathname === "/" ? "" : pathname}`;
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(url, 308);
   }
 
   // Coarse authentication only. Server layouts/actions check fresh database roles.

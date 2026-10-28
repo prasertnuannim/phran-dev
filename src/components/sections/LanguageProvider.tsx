@@ -1,11 +1,10 @@
 "use client";
 
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { Globe2, ArrowRightLeft } from "lucide-react";
 import { translations } from "./translations";
 
-import { useRouter } from "next/navigation";
-import { localizedPath, type Language } from "@/lib/publicLocale";
+import { isLanguage, type Language } from "@/lib/publicLocale";
 const LanguageContext = createContext<{ language: Language; setLanguage: (language: Language) => void; t: (key: string) => string }>({
   language: "th" as Language,
   setLanguage: () => {},
@@ -13,17 +12,19 @@ const LanguageContext = createContext<{ language: Language; setLanguage: (langua
 });
 
 export function LanguageProvider({ children, initialLanguage = "th" }: { children: React.ReactNode; initialLanguage?: Language }) {
-  const router = useRouter();
-  const language = initialLanguage;
+  const [language, setLanguage] = useState<Language>(initialLanguage);
+  useEffect(() => {
+    const saved = document.cookie.split("; ").find((item) => item.startsWith("phran-language="))?.split("=")[1] ?? null;
+    if (isLanguage(saved)) queueMicrotask(() => setLanguage(saved));
+  }, []);
   useEffect(() => {
     const previous = document.documentElement.lang;
     document.documentElement.lang = language === "zh" ? "zh-Hans" : language;
-    document.cookie = `phran-language=${language}; Path=/; Max-Age=31536000; SameSite=Lax`;
     return () => { document.documentElement.lang = previous; };
   }, [language]);
   const changeLanguage = (next: Language) => {
-    const path = window.location.pathname.replace(/^\/(th|en|zh)(?=\/|$)/, "") || "/";
-    router.push(localizedPath(next, path) + window.location.search + window.location.hash, { scroll: false });
+    setLanguage(next);
+    document.cookie = `phran-language=${next}; Path=/; Max-Age=31536000; SameSite=Lax`;
   };
   return <LanguageContext.Provider value={{ language, setLanguage: changeLanguage, t: (key) => translations[key]?.[language] ?? key }}>{children}</LanguageContext.Provider>;
 }

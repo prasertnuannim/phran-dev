@@ -31,30 +31,18 @@ function loadTs(relative, mocks = {}) {
 }
 
 
-test('each public page has localized canonical, social URL, title, and language alternatives', async () => {
-  for (const language of ['th', 'en', 'zh']) {
-    const { publicMetadata } = loadTs('src/lib/publicMetadata.ts', {
-      'next/headers': { headers: async () => new Headers({ 'x-public-language': language }) },
-    });
-    for (const page of ['home', 'about', 'architecture']) {
-      const result = await publicMetadata(page);
-      const expected = `/${language}${page === 'home' ? '' : '/' + page}`;
-      assert.equal(result.alternates.canonical, expected);
-      assert.equal(result.openGraph.url, expected);
-      assert.equal(result.openGraph.title, result.title.absolute);
-      assert.equal(result.twitter.description, result.description);
-      assert.equal(Object.keys(result.alternates.languages).length, 4);
-      assert.ok(result.description.length > 0);
-    }
-  }
-});
-
-test('public language falls back safely when the header is missing or unsupported', async () => {
-  for (const value of ['', 'xx']) {
-    const { getPublicLanguage } = loadTs('src/lib/publicMetadata.ts', {
-      'next/headers': { headers: async () => new Headers({ 'x-public-language': value }) },
-    });
-    assert.equal(await getPublicLanguage(), 'th');
+test('public SEO always uses Thai metadata and a single URL per page', async () => {
+  const { publicMetadata } = loadTs('src/lib/publicMetadata.ts');
+  for (const page of ['home', 'about', 'architecture']) {
+    const result = await publicMetadata(page);
+    const expected = page === 'home' ? '/' : '/' + page;
+    assert.equal(result.alternates.canonical, expected);
+    assert.equal(result.openGraph.url, expected);
+    assert.equal(result.openGraph.locale, 'th_TH');
+    assert.equal(result.openGraph.title, result.title.absolute);
+    assert.equal(result.twitter.description, result.description);
+    assert.equal(result.alternates.languages, undefined);
+    assert.match(result.description, /[ก-๙]/);
   }
 });
 
@@ -87,33 +75,30 @@ test('login failure and rate limiting return safe, translated error codes', asyn
   }
 });
 
-test('localized routes rewrite to public pages with trusted language headers', async () => {
+test('old language URLs redirect permanently to the same public URL, preserving query', async () => {
   const { NextRequest } = nodeRequire('next/server');
   const { proxy } = loadTs('src/proxy.ts', {
     'next-auth/jwt': { getToken: async () => { throw new Error('public pages must not require auth'); } },
   });
   for (const language of ['th', 'en', 'zh']) {
     for (const page of ['', '/about', '/architecture']) {
-      const response = await proxy(new NextRequest(`https://phran.dev/${language}${page}?ref=test`, {
-        headers: { 'x-public-language': 'spoofed' },
-      }));
-      assert.equal(response.headers.get('x-middleware-rewrite'), `https://phran.dev${page || '/'}?ref=test`);
-      assert.equal(response.headers.get('x-middleware-request-x-public-language'), language);
+      const response = await proxy(new NextRequest(`https://phran.dev/${language}${page}?ref=test`));
+      assert.equal(response.status, 308);
+      assert.equal(response.headers.get('location'), `https://phran.dev${page || '/'}?ref=test`);
     }
   }
 });
 
-test('legacy URLs redirect with query intact and language preference is validated', async () => {
+test('public URLs stay unchanged regardless of remembered language', async () => {
   const { NextRequest } = nodeRequire('next/server');
   const { proxy } = loadTs('src/proxy.ts', {
-    'next-auth/jwt': { getToken: async () => null },
+    'next-auth/jwt': { getToken: async () => { throw new Error('public pages must not require auth'); } },
   });
-  for (const [saved, expected] of [['en', 'en'], ['zh', 'zh'], ['invalid', 'th']]) {
-    const response = await proxy(new NextRequest('https://phran.dev/about?ref=test', {
-      headers: { cookie: `phran-language=${saved}` },
-    }));
-    assert.equal(response.headers.get('location'), `https://phran.dev/${expected}/about?ref=test`);
+  for (const saved of ['en', 'zh', 'invalid']) {
+    for (const page of ['/', '/about', '/architecture', '/images/example.png']) {
+      const response = await proxy(new NextRequest(`https://phran.dev${page}`, { headers: { cookie: `phran-language=${saved}` } }));
+      assert.equal(response.headers.get('x-middleware-next'), '1');
+      assert.equal(response.headers.get('location'), null);
+    }
   }
-  const response = await proxy(new NextRequest('https://phran.dev/images/example.png'));
-  assert.equal(response.headers.get('x-middleware-next'), '1');
 });
